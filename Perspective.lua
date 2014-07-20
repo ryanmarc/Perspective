@@ -553,7 +553,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
 
                     -- Draw Dot 
                     self.Overlay:AddPixie( {
-                            strSprite = "PerspectiveSprites:small-circle", cr = Perspective:HandleGlobalAlpha(ui.cLineColor),
+                            strSprite = "PerspectiveSprites:small-circle", cr = self:HandleGlobalAlpha(ui.cLineColor),
                                 loc = { fPoints = pixieLocPoints, nOffsets = { drawX - 5, drawY - 5, drawX + 5, drawY + 5 } }
                         } )
 
@@ -569,7 +569,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                 -- Only draw final dot if not showing item name/icon
                 if not showItem then 
                     self.Overlay:AddPixie( {
-                            strSprite = "PerspectiveSprites:small-circle", cr = Perspective:HandleGlobalAlpha(ui.cLineColor), 
+                            strSprite = "PerspectiveSprites:small-circle", cr = self:HandleGlobalAlpha(ui.cLineColor), 
                             loc = { fPoints = pixieLocPoints, nOffsets = { targetX - 5, targetY - 5, targetX + 5, targetY + 5 } }
                         } )
                 end
@@ -580,14 +580,14 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                     local lineAlpha = string.sub(ui.cLineColor, 1, 2)
 
                     self.Overlay:AddPixie( {
-                            bLine = true, fWidth = ui.lineWidth + 2, cr = Perspective:HandleGlobalAlpha(lineAlpha .. "000000"),
+                            bLine = true, fWidth = ui.lineWidth + 2, cr = self:HandleGlobalAlpha(lineAlpha .. "000000"),
                             loc = { fPoints = pixieLocPoints, nOffsets = { lPos.x, lPos.y, pPos.nX + xOffset, pPos.nY + yOffset } }
                         })
                 end
 
                 -- Draw the actual line to the unit's vector
                 self.Overlay:AddPixie( {
-                        bLine = true, fWidth = ui.lineWidth, cr = Perspective:HandleGlobalAlpha(ui.cLineColor),
+                        bLine = true, fWidth = ui.lineWidth, cr = self:HandleGlobalAlpha(ui.cLineColor),
                         loc = { fPoints = pixieLocPoints, nOffsets = { lPos.x, lPos.y, pPos.nX + xOffset, pPos.nY + yOffset } }
                     } )
             end
@@ -599,7 +599,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
         -- Draw the icon first
         if ui.showIcon then
             self.Overlay:AddPixie( {
-                    strSprite = ui.icon, cr = Perspective:HandleGlobalAlpha(ui.cIconColor),
+                    strSprite = ui.icon, cr = self:HandleGlobalAlpha(ui.cIconColor),
                     loc = { fPoints = pixieLocPoints, nOffsets = { uPos.nX - (ui.scaledWidth / 2),  uPos.nY - (ui.scaledHeight / 2),  uPos.nX + (ui.scaledWidth / 2), uPos.nY + (ui.scaledHeight / 2) } }
                 } )
         end     
@@ -615,7 +615,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
             text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. " (" .. math.ceil(ui.distance) .. "m)" or text
 
             self.Overlay:AddPixie( {
-                    strText = text, strFont = ui.font, crText = Perspective:HandleGlobalAlpha(ui.cFontColor),
+                    strText = text, strFont = ui.font, crText = self:HandleGlobalAlpha(ui.cFontColor),
                     loc = { fPoints = pixieLocPoints, nOffsets = { uPos.nX - 50, uPos.nY + (ui.scaledHeight / 2) + 0, uPos.nX + 50, uPos.nY + (ui.scaledHeight / 2) + 100 } },
                     flagsText = { DT_CENTER = true, DT_WORDBREAK = true }
                 } )
@@ -1263,7 +1263,7 @@ function Perspective:MarkersDraw()
 
                     self.Overlay:AddPixie({
                         strSprite = marker.icon,
-                        cr = Perspective:HandleGlobalAlpha(marker.iconColor),
+                        cr = self:HandleGlobalAlpha(marker.iconColor),
                         loc = {
                             fPoints = { 0, 0, 0, 0 },
                             nOffsets = {
@@ -1285,7 +1285,7 @@ function Perspective:MarkersDraw()
                     self.Overlay:AddPixie({
                         strText = text,
                         strFont = marker.font,
-                        crText = Perspective:HandleGlobalAlpha(marker.fontColor),
+                        crText = self:HandleGlobalAlpha(marker.fontColor),
                         loc = {
                             fPoints = { 0, 0, 0, 0 },
                             nOffsets = {

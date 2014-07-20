@@ -2740,7 +2740,7 @@ function PerspectiveOptions:Settings_OnTimerChanged(handler, control, button)
         data.text:SetText(val .. " " .. data.unit)
 
         -- Save the value.
-        self.db.profile[self.profile].settings[data.convertedValue] = val
+        self.db.profile[self.profile].settings[data.value] = val
 
         -- Only create new timers if the addon isn't disabled.
         if not self.db.profile[self.profile].settings.disabled then
