@@ -4,6 +4,26 @@ require "Apollo"
 require "Quest"
 require "QuestLib"
 
+----------------------------------------------------------------------
+--- Upvalues
+----------------------------------------------------------------------
+local pairs, ipairs = pairs, ipairs
+local osclock, type = os.clock, type
+local tinsert, tremove, tgetn = table.insert, table.remove, table.getn
+local tsort = table.sort
+local abs, asin, ceil, sqrt = math.abs, math.asin, math.ceil, math.sqrt
+local max, min = math.max, math.min
+local strsub, strfind = string.sub, string.find
+
+--Wildstar Specific APIs
+local Apollo, GameLib, GroupLib, XmlDoc = Apollo, GameLib, GroupLib, XmlDoc
+local PlayerPathLib, QuestLib, Vector3 = PlayerPathLib, QuestLib, Vector3
+local ChallengesLib, PublicEventsLib = ChallengesLib, PublicEventsLib
+local Quest = Quest
+
+----------------------------------------------------------------------
+--- Local Variables
+----------------------------------------------------------------------
 local MAX_QUEUE_SIZE = 10
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
@@ -77,18 +97,8 @@ local DeadzoneRaceLookup = {
 
 local unitTypes = {}
 
-function Perspective:new(o)
-    o = o or {}
-    setmetatable(o, self)
-    self.__index = self 
-
-    return o
-end
-
 local tick = 0
 local elapsed = 0
-
-
 
 function Perspective:OnInitialize()
     -- Load our localization
@@ -200,9 +210,7 @@ function Perspective:OnEnable()
 
     self.loaded = true
 
-    if Apollo.GetAddon("Rover") then
-        SendVarToRover("Perspective", self)
-    end
+    --Event_FireGenericEvent("SendVarToRover", "Perspective", self)
 
     self:OnResolutionChanged()
 end
@@ -303,7 +311,7 @@ end
 
 function Perspective:UpdateTimers()
     -- Get the amount of time since last update
-    elapsed = (os.clock() - tick)
+    elapsed = (osclock() - tick)
 
     for name, timer in pairs(self.timers) do
         -- Only update the timer if it's enabled.
@@ -325,16 +333,16 @@ function Perspective:UpdateTimers()
     end
 
     -- Save the last tick.
-    tick = os.clock()
+    tick = osclock()
 end
 
 function Perspective:OnTimerQueue(elapsed)
-    if table.getn(self.units.queue) > 0 then
+    if tgetn(self.units.queue) > 0 then
 
         local count = 1
 
         -- Iterrate backwards so we can remove them from the table as we go
-        for i = table.getn(self.units.queue), 1, -1 do
+        for i = tgetn(self.units.queue), 1, -1 do
             local update = self.units.queue[i]
 
             if update.recategorize then
@@ -349,17 +357,17 @@ function Perspective:OnTimerQueue(elapsed)
                 if canHaveReward then
                     -- If this is a new quest or challenge, first make sure the
                     -- unit has the quest/challenge
-                    if new and update.ui[update.table][update.id] then
+                    if update.new and update.ui[update.table][update.id] then
                         -- Recategorize the unit.
                         self:UpdateUnitCategory(update.ui, update.unit)
-                    elseif not new then
+                    elseif not update.new then
                         -- Recategorize the unit.
                         self:UpdateUnitCategory(update.ui, update.unit)
                     end
                 end
             end
 
-            table.remove(self.units.queue, i)
+            tremove(self.units.queue, i)
 
             count = count + 1
 
@@ -387,7 +395,7 @@ function Perspective:AddPixie(ui, pPos, pixies, items, lines)
         if not ui.disabled and 
             ui.inRange and
             not (ui.disableInCombat and GameLib.GetPlayerUnit():IsInCombat()) and
-            table.getn(pixies) < Options.db.profile[Options.profile].settings.max
+            tgetn(pixies) < Options.db.profile[Options.profile].settings.max
             and (not isOccluded or (isOccluded and not ui.disableOccluded)) then
 
             -- Update the units position
@@ -426,7 +434,7 @@ function Perspective:AddPixie(ui, pPos, pixies, items, lines)
                 -- Either the item or line are able to be shown.
                 if showItem or showLine then
                     -- Add the unit to the draw list.
-                    table.insert(pixies, { 
+                    tinsert(pixies, { 
                         ui = ui, 
                         unit = unit,
                         uPos = uPos, 
@@ -460,7 +468,7 @@ function Perspective:GetLineOffsetFromCenter (yDist, vectorLength)
     if (vectorLength == 0) then return 0 end
 
     -- Get angle in radians: arcsin of opposite(yDist) / hypothenuse(vectorLength)
-    local angle = math.asin(yDist / vectorLength)
+    local angle = asin(yDist / vectorLength)
 
     local Wide = 0
     if self.PlayerRaceIsWide ~= nil then Wide = self.PlayerRaceIsWide end
@@ -577,7 +585,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                 -- Draw lines!
                 -- Draw the background line to give the outline if required
                 if ui.showLineOutline then
-                    local lineAlpha = string.sub(ui.cLineColor, 1, 2)
+                    local lineAlpha = strsub(ui.cLineColor, 1, 2)
 
                     self.Overlay:AddPixie( {
                             bLine = true, fWidth = ui.lineWidth + 2, cr = self:HandleGlobalAlpha(lineAlpha .. "000000"),
@@ -612,7 +620,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                 text = ui.display or ui.name or ""
             end
 
-            text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. " (" .. math.ceil(ui.distance) .. "m)" or text
+            text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. " (" .. ceil(ui.distance) .. "m)" or text
 
             self.Overlay:AddPixie( {
                     strText = text, strFont = ui.font, crText = self:HandleGlobalAlpha(ui.cFontColor),
@@ -705,7 +713,7 @@ function Perspective:OnTimerDraw()
         -- "behind" our closer pixies.
         for i = #pixies, 1, -1 do
             -- Get our next pixie
-            pixie = pixies[i]
+            local pixie = pixies[i]
 
             -- Drw the pixie
             self:DrawPixie(
@@ -745,12 +753,12 @@ function Perspective:OnTimerSlow()
                     local unit = GameLib.GetUnitById(id)
                 
                     if unit and self:UpdateUnit(ui, unit) then
-                        table.insert(self.sorted.categorized, ui)
+                        tinsert(self.sorted.categorized, ui)
                     end
                 end
             end
 
-            table.sort(self.sorted.categorized, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
+            tsort(self.sorted.categorized, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
             
             if self.markersInitialized then
                 self:MarkersUpdate(vector)
@@ -769,7 +777,7 @@ function Perspective:OnTimerSlow()
 
                 if category ~= ui.category then
                     -- Need to recategorize this unit
-                    table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+                    tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
                 end
             end
         end
@@ -799,13 +807,13 @@ function Perspective:OnTimerFast(forced)
                     local unit = GameLib.GetUnitById(id)
                 
                     if unit and self:UpdateUnit(ui, unit) then
-                        table.insert(self.sorted.prioritized, ui)
+                        tinsert(self.sorted.prioritized, ui)
                     end
                 end
             end
 
             -- Sort the units by distance.
-            table.sort(self.sorted.prioritized, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
+            tsort(self.sorted.prioritized, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
         end
     end
 end
@@ -1148,13 +1156,15 @@ function Perspective:UpdateUnit(ui, unit)
                         ui.category == "questObjective" or
                         ui.category == "challenge" then
                         -- Queue the unit to be recategorized.
-                        table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+                        tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
                         return
                     end
                 end
 
                 if ui.loaded then
                     -- Find the index of the ui if its not passed in.
+                    --[[ The below code appears to do nothing as there is no tbl variable in
+                         this scope.  Unsure what the intention was.
                     if tbl and not index then
                         for i, u in pairs(self[tbl]) do
                             if u.id == ui.id then
@@ -1163,6 +1173,7 @@ function Perspective:UpdateUnit(ui, unit)
                             end
                         end
                     end
+                    ]]
 
                     -- Update the players position and vector
                     local pPos = position
@@ -1181,7 +1192,7 @@ function Perspective:UpdateUnit(ui, unit)
                         ui.distance = (pVec - ui.vector):Length()
                         
                         -- Get the scale size based on distance.
-                        ui.scale = math.min(1 / (ui.distance / 100), 1)
+                        ui.scale = min(1 / (ui.distance / 100), 1)
                         
                         -- Determine if the unit is in range of display.
                         ui.inRange = (ui.distance >= ui.minDistance and 
@@ -1192,8 +1203,8 @@ function Perspective:UpdateUnit(ui, unit)
                         ui.inRangeLimit = (ui.distance <= ui.rangeLimit)
 
                         -- Scale our icon based on the dimensions and scale factor.           
-                        ui.scaledWidth = ui.iconWidth * math.max(ui.scale, .5)
-                        ui.scaledHeight = ui.iconHeight * math.max(ui.scale, .5)
+                        ui.scaledWidth = ui.iconWidth * max(ui.scale, .5)
+                        ui.scaledHeight = ui.iconHeight * max(ui.scale, .5)
 
                         --[[if ui.iconColorMode == "custom" then
                             ui.cIconColor = ui.iconColor
@@ -1257,7 +1268,7 @@ function Perspective:MarkersDraw()
 
                 if marker.showIcon then
                     if self.opacity ~= "FF" then
-                        local baseColor = string.sub(marker.iconColor, 3, 8)
+                        local baseColor = strsub(marker.iconColor, 3, 8)
                         marker.iconColor = self.opacity .. baseColor
                     end
 
@@ -1280,7 +1291,7 @@ function Perspective:MarkersDraw()
                         text = marker.display or marker.name or ""
                     end
 
-                    text = marker.showDistance and text .. " (" .. math.ceil(region.distance) .. "m)" or text
+                    text = marker.showDistance and text .. " (" .. ceil(region.distance) .. "m)" or text
 
                     self.Overlay:AddPixie({
                         strText = text,
@@ -1386,7 +1397,7 @@ function Perspective:UpdateAllEvents()
     if events then
         for id, event in pairs(events) do
             id = "event" .. id
-            if table.getn(event:GetObjectives()) > 0 then
+            if tgetn(event:GetObjectives()) > 0 then
                 self.markers[id] = {
                     name = event:GetName(),
                     type = "event",
@@ -1397,7 +1408,7 @@ function Perspective:UpdateAllEvents()
 
                 for _, objective in pairs(event:GetObjectives()) do
                     for index, loc in pairs(objective:GetLocations()) do
-                        table.insert(self.markers[id].regions, {
+                        tinsert(self.markers[id].regions, {
                             vector = Vector3.New(loc.x, loc.y, loc.z) 
                         })
                     end
@@ -1414,7 +1425,7 @@ function Perspective:MarkerPathUpdate(mission, deactivated)
     local id = "path" .. mission:GetId()
 
     if not mission:IsComplete() and not deactivated then
-        if table.getn(mission:GetMapRegions()) > 0 or table.getn(mission:GetMapLocations()) > 0 then
+        if tgetn(mission:GetMapRegions()) > 0 or tgetn(mission:GetMapLocations()) > 0 then
             self.markers[id] = {
                 name = mission:GetName(),
                 mission = mission,
@@ -1425,13 +1436,13 @@ function Perspective:MarkerPathUpdate(mission, deactivated)
             self:MarkerUpdateOptions(self.markers[id], "pathLocation")
 
             for index, region in pairs(mission:GetMapRegions()) do
-                table.insert(self.markers[id].regions, {
+                tinsert(self.markers[id].regions, {
                     vector = Vector3.New(region.tIndicator.x, region.tIndicator.y, region.tIndicator.z)
                 })
                 self:MarkerUpdate(self.markers[id])
             end
             for index, loc in pairs(mission:GetMapLocations()) do
-                table.insert(self.markers[id].regions, {
+                tinsert(self.markers[id].regions, {
                     vector = Vector3.New(loc.x, loc.y, loc.z)
                 })
                 self:MarkerUpdate(self.markers[id])
@@ -1449,7 +1460,7 @@ function Perspective:MarkerQuestUpdate(quest)
       (quest:GetState() == Quest.QuestState_Accepted or 
        quest:GetState() == Quest.QuestState_Achieved) then
         -- Make sure we have actual map regions
-        if table.getn(quest:GetMapRegions()) > 0 then
+        if tgetn(quest:GetMapRegions()) > 0 then
             -- Create the quest marker
             self.markers[id] = {
                 name = quest:GetTitle(),
@@ -1516,14 +1527,14 @@ function Perspective:MarkerUpdate(marker, vector)
     if vector then
         for index, region in pairs(marker.regions) do
             -- Get the distance to the marker
-            region.distance = math.ceil((vector - region.vector):Length())
+            region.distance = ceil((vector - region.vector):Length())
                 
             -- Determine if the player is in the region
             region.inRange = (region.distance >= marker.minDistance and
                             region.distance <= marker.maxDistance)
         end
 
-        table.sort(marker.regions, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
+        tsort(marker.regions, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
     end
 end
 
@@ -1547,7 +1558,7 @@ function Perspective:OnUnitCreated(unit)
 end
 
 function Perspective:OnUnitDestroyed(unit)
-    self.units.all[unit:GetId()] = nils
+    self.units.all[unit:GetId()] = nil
 
     self:DestroyUnitInfo(unit)
 end
@@ -1690,7 +1701,7 @@ function Perspective:OnUnitActivationTypeChanged(unit)
     local ui = self:GetUnitInfo(unit)
 
     -- Insert into queue to be recategorized
-    table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+    tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
     --self:UpdateUnitCategory(ui, unit)
 end
 
@@ -1698,7 +1709,7 @@ function Perspective:OnUnitNameChanged(unit)
     local ui = self:GetUnitInfo(unit)
 
     -- Insert into queue to be recategorized
-    table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+    tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
     --self:UpdateUnitCategory(ui, unit)
 end
 
@@ -1707,7 +1718,7 @@ function Perspective:OnUnitGroupChanged(unit)
         local ui = self:GetUnitInfo(unit)
 
     -- Insert into queue to be recategorized
-    table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+    tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
         -- Recategorize the player.
         --self:UpdateUnitCategory(ui, unit)
     end
@@ -1720,7 +1731,7 @@ function Perspective:OnGroup_MemberFlagsChanged(index, arg2, flags)
         local ui = self:GetUnitInfo(unit)
         
         -- Insert into queue to be recategorized
-        table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+        tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
         --self:UpdateUnitCategory(ui, unit)
     end
 end
@@ -1791,7 +1802,7 @@ function Perspective:RecategorizePlayerUnits()
         if unit:IsValid() and unit:GetType() == "Player" then
             local ui = self:GetUnitInfo(unit)
 
-            table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
+            tinsert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
         end
     end
 end
@@ -1805,7 +1816,7 @@ function Perspective:RecategorizeAllUnits(queue)
             local ui = self:GetUnitInfo(unit)
 
             if queue then
-                table.insert(self.units.queue, { 
+                tinsert(self.units.queue, { 
                     ui = ui, 
                     unit = unit, 
                     recategorize = true })
@@ -1825,7 +1836,7 @@ function Perspective:UpdateQuestUnits(quest, state)
                 -- Get the ui for the unit or create a new one.
                 local ui = self:GetUnitInfo(unit)
 
-                table.insert(self.units.queue, { 
+                tinsert(self.units.queue, { 
                     ui = ui, 
                     unit = unit, 
                     table = "quests", 
@@ -1842,7 +1853,7 @@ function Perspective:UpdateQuestUnits(quest, state)
                 if ui.hasQuest and ui.quests[quest:GetId()] then
                     local unit = GameLib.GetUnitById(id)
 
-                    table.insert(self.units.queue, { 
+                    tinsert(self.units.queue, { 
                         ui = ui, 
                         unit = unit, 
                         table = "quests", 
@@ -1864,7 +1875,7 @@ function Perspective:UpdateChallengeUnits(challenge, active)
                 -- Get the ui for the unit.
                 local ui = self:GetUnitInfo(unit)
 
-                table.insert(self.units.queue, { 
+                tinsert(self.units.queue, { 
                     ui = ui, 
                     unit = unit, 
                     table = "challenges", 
@@ -1880,7 +1891,7 @@ function Perspective:UpdateChallengeUnits(challenge, active)
                     local unit = GameLib.GetUnitById(id)
 
                     if unit then
-                        table.insert(self.units.queue, { 
+                        tinsert(self.units.queue, { 
                             ui = ui, 
                             unit = unit, 
                             table = "challenges", 
@@ -2025,7 +2036,7 @@ end
 
 function Perspective:UpdatePickup(ui, unit)
     if unit and unit:IsValid() and self.Player then
-        if string.find(unit:GetName(), self.Player:GetName()) and
+        if strfind(unit:GetName(), self.Player:GetName()) and
             not Options.db.profile[Options.profile].categories.subdue.disabled then
             ui.category = "subdue"
         end
@@ -2090,7 +2101,7 @@ function Perspective:UpdateActivationState(ui, unit)
 
             if v.state == "Datacube" and 
                 PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Scientist and 
-                string.find(unit:GetName(), L.Unit_Datacube) then
+                strfind(unit:GetName(), L.Unit_Datacube) then
                 category = "scientistScans"
             end 
 
@@ -2099,6 +2110,7 @@ function Perspective:UpdateActivationState(ui, unit)
     end
 
     if not category then
+        local path
         -- Get the player's path type
         if  PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Soldier then
             path = "soldier"
@@ -2270,7 +2282,7 @@ end
 
 function Perspective:HandleGlobalAlpha(color)
     if self.opacity ~= "FF" then
-        local baseColor = string.sub(color, 3, 8)
+        local baseColor = strsub(color, 3, 8)
         color = self.opacity .. baseColor
     end
 
