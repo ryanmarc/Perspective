@@ -2,6 +2,9 @@
         New Category
 ]]
 
+local string = string
+local math = math
+
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
 local PerspectiveOptions = GeminiAddon:NewAddon("PerspectiveOptions", "Perspective")
@@ -59,14 +62,7 @@ local fonts = {
     { name = "Thick" } }
 
 local controls = {}
-
-function PerspectiveOptions:new(o)
-    o = o or {}
-    setmetatable(o, self)
-    self.__index = self 
-
-    return o
-end
+local defaults = {}
 
 function PerspectiveOptions:OnInitialize()
     self.profile = "default"
@@ -79,7 +75,7 @@ function PerspectiveOptions:OnInitialize()
     Perspective = GeminiAddon:GetAddon("Perspective")
 
     -- Load our default values
-    local defaults = self:LoadDefaults()
+    defaults = self:LoadDefaults()
 
     -- Load our controls
     controls = self:LoadControls();
@@ -112,6 +108,8 @@ function PerspectiveOptions:OnInitialize()
     -- Register our addon with the interface menu.
     Apollo.RegisterEventHandler("InterfaceMenuListHasLoaded",       "OnInterfaceMenuListHasLoaded", self)
     Apollo.RegisterEventHandler("InterfaceMenuClicked",             "OnInterfaceMenuClicked", self)
+
+    Apollo.RegisterEventHandler("WindowManagementReady", "OnWindowManagementReady", self)
 
     -- Register the slash command   
     --Apollo.RegisterSlashCommand("perspective", "ShowOptions", self)
@@ -169,11 +167,11 @@ function PerspectiveOptions:DeadzoneInfo()
 end
 
 
-function PerspectiveOptions:OnEnable()
-    if Apollo.GetAddon("Rover") then
-        SendVarToRover("PerspectiveOptions", self)
-    end
-end
+-- function PerspectiveOptions:OnEnable()
+--     if Apollo.GetAddon("Rover") then
+--         SendVarToRover("PerspectiveOptions", self)
+--     end
+-- end
 
 function PerspectiveOptions:OnDialogClose()
     self.Dialog:Show(false, true)
@@ -1393,6 +1391,10 @@ function PerspectiveOptions:OnInterfaceMenuClicked(arg1, arg2, arg3)
     self.Options:Show(not self.Options:IsShown(), true)
 end
 
+function PerspectiveOptions:OnWindowManagementReady()
+  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.Options, strName = "Perspective-Options"})
+end
+
 ---------------------------------------------------------------------------------------------------
 -- UI Functions
 ---------------------------------------------------------------------------------------------------
@@ -1476,20 +1478,6 @@ function PerspectiveOptions:ArrangeChildren(window, type)
 end
 
 function PerspectiveOptions:InitializeOptions()
-    -- Only run these actions on the first initialize
-    if not self.initialized then
-        -- Setup the event handlers for the options window
-        self.Options:AddEventHandler("WindowMoved",         "OnOptions_AnchorsChanged")
-        self.Options:AddEventHandler("WindowSizeChanged",   "OnOptions_AnchorsChanged")
-    end
-
-    -- Load the window position
-    local pos = self.db.profile.position
-
-    if pos ~= nil then
-        self.Options:SetAnchorOffsets(pos.left, pos.top, pos.right, pos.bottom)
-    end
-
     -- Initialize Options Buttons
     for name, options in pairs(controls.Options.Buttons) do
         self:ButtonInitialize("Options", name, nil, options)
@@ -1974,7 +1962,7 @@ function PerspectiveOptions:ButtonClickedOptionsNewButton(handler, control, butt
 end
 
 function PerspectiveOptions:ButtonClickedOptionsDefaultButton(handler, control, button)
-    if button == 1 then
+    -- if button == 1 then
         self.db:ResetProfile()
 
         self:InitializeOptions()
@@ -1992,7 +1980,7 @@ function PerspectiveOptions:ButtonClickedOptionsDefaultButton(handler, control, 
 
         -- Update the markers.
         Perspective:MarkersInit()
-    end
+    -- end
 end
 
 function PerspectiveOptions:ButtonClickedOptionsImportButton(handler, control, button)
@@ -2325,18 +2313,19 @@ function PerspectiveOptions:TextBoxReturnSettings(handler, control)
     -- Get the control's value
     local val = control:GetText()
 
+    -- If the option is blank, load the default setting.
+    if val == "" then 
+        val = defaults.profile.default.settings[data.options.option]
+        control.SetText(val)
+    end
+
     -- Check to see if the textbox is expecting a number
     if data.options.isNumber then
         if not tonumber(val) then
-            val = self.db.profile[self.profile].settings[options.option]
+            val = self.db.profile[self.profile].settings[data.options.option]
         else
             val = tonumber(val)
         end
-    end
-
-    -- If the option is blank, load the default setting.
-    if val == "" then 
-        val = self.db.profile[self.profile].settings[options.option]
     end
 
     self.db.profile[self.profile].settings[data.options.option] = val   
@@ -2810,17 +2799,6 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Options Events
 ---------------------------------------------------------------------------------------------------
-
-function PerspectiveOptions:OnOptions_AnchorsChanged()
-    local l, t, r, b = self.Options:GetAnchorOffsets()
-
-    self.db.profile.position = {
-        left = l,
-        top = t,
-        right = r,
-        bottom = b
-    }
-end
 
 function PerspectiveOptions:OnHeaderButtonClicked(panel)
     local panels = {

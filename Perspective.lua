@@ -4,6 +4,11 @@ require "Apollo"
 require "Quest"
 require "QuestLib"
 
+local os, type = os, type
+local table = table
+local math = math
+local string = string
+
 local MAX_QUEUE_SIZE = 10
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
@@ -47,7 +52,7 @@ local activationStates = {
     { state = "Dye",                    category = "dye" },
     { state = "Bank",                   category = "bank" },
     { state = "GuildBank",              category = "guildBank" },
-    { state = "Dungeon",                category = "dungeon" },
+    { state = "Dungeon",                category = "dungeon" }
 }
 
 -- Used to fix units that do not show up as challenges
@@ -77,18 +82,8 @@ local DeadzoneRaceLookup = {
 
 local unitTypes = {}
 
-function Perspective:new(o)
-    o = o or {}
-    setmetatable(o, self)
-    self.__index = self 
-
-    return o
-end
-
 local tick = 0
 local elapsed = 0
-
-
 
 function Perspective:OnInitialize()
     -- Load our localization
@@ -200,9 +195,9 @@ function Perspective:OnEnable()
 
     self.loaded = true
 
-    if Apollo.GetAddon("Rover") then
-        SendVarToRover("Perspective", self)
-    end
+    -- if Apollo.GetAddon("Rover") then
+    --     SendVarToRover("Perspective", self)
+    -- end
 
     self:OnResolutionChanged()
 end
@@ -349,10 +344,10 @@ function Perspective:OnTimerQueue(elapsed)
                 if canHaveReward then
                     -- If this is a new quest or challenge, first make sure the
                     -- unit has the quest/challenge
-                    if new and update.ui[update.table][update.id] then
+                    if update.new and update.ui[update.table][update.id] then
                         -- Recategorize the unit.
                         self:UpdateUnitCategory(update.ui, update.unit)
-                    elseif not new then
+                    elseif not update.new then
                         -- Recategorize the unit.
                         self:UpdateUnitCategory(update.ui, update.unit)
                     end
@@ -612,11 +607,11 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                 text = ui.display or ui.name or ""
             end
 
-            text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. " (" .. math.ceil(ui.distance) .. "m)" or text
+            text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. "\n(" .. math.ceil(ui.distance) .. "m)" or text
 
             self.Overlay:AddPixie( {
                     strText = text, strFont = ui.font, crText = self:HandleGlobalAlpha(ui.cFontColor),
-                    loc = { fPoints = pixieLocPoints, nOffsets = { uPos.nX - 50, uPos.nY + (ui.scaledHeight / 2) + 0, uPos.nX + 50, uPos.nY + (ui.scaledHeight / 2) + 100 } },
+                    loc = { fPoints = pixieLocPoints, nOffsets = { uPos.nX - 100, uPos.nY + (ui.scaledHeight / 2) + 0, uPos.nX + 100, uPos.nY + (ui.scaledHeight / 2) + 100 } },
                     flagsText = { DT_CENTER = true, DT_WORDBREAK = true }
                 } )
         end
@@ -1256,11 +1251,6 @@ function Perspective:MarkersDraw()
                 region.inRange then
 
                 if marker.showIcon then
-                    if self.opacity ~= "FF" then
-                        local baseColor = string.sub(marker.iconColor, 3, 8)
-                        marker.iconColor = self.opacity .. baseColor
-                    end
-
                     self.Overlay:AddPixie({
                         strSprite = marker.icon,
                         cr = self:HandleGlobalAlpha(marker.iconColor),
@@ -1280,7 +1270,7 @@ function Perspective:MarkersDraw()
                         text = marker.display or marker.name or ""
                     end
 
-                    text = marker.showDistance and text .. " (" .. math.ceil(region.distance) .. "m)" or text
+                    text = marker.showDistance and text .. "\n(" .. math.ceil(region.distance) .. "m)" or text
 
                     self.Overlay:AddPixie({
                         strText = text,
@@ -1289,9 +1279,9 @@ function Perspective:MarkersDraw()
                         loc = {
                             fPoints = { 0, 0, 0, 0 },
                             nOffsets = {
-                                uPos.x - (marker.iconWidth), 
+                                uPos.x - 100, 
                                 uPos.y + (marker.iconHeight / 2), 
-                                uPos.x + (marker.iconWidth),
+                                uPos.x + 100,
                                 uPos.y + (100) } },
                         flagsText = {
                             DT_CENTER = true,
@@ -1547,7 +1537,7 @@ function Perspective:OnUnitCreated(unit)
 end
 
 function Perspective:OnUnitDestroyed(unit)
-    self.units.all[unit:GetId()] = nils
+    self.units.all[unit:GetId()] = nil
 
     self:DestroyUnitInfo(unit)
 end
