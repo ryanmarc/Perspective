@@ -698,9 +698,10 @@ function Perspective:OnTimerDraw()
         -- Now, for the pixies, we'll draw them in reverse, because the lists were sorted by
         -- distance, closest to farthest.  This will ensure the farthest are drawn first and 
         -- "behind" our closer pixies.
+        local pixie
         for i = #pixies, 1, -1 do
             -- Get our next pixie
-            local pixie = pixies[i]
+            pixie = pixies[i]
 
             -- Drw the pixie
             self:DrawPixie(
