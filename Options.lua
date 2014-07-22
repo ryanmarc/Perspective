@@ -4,6 +4,7 @@
 
 local string = string
 local math = math
+local pairs, type, tostring, tonumber = pairs, type, tostring, tonumber
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
@@ -123,7 +124,7 @@ function PerspectiveOptions:OnSlashCommand(cmd, params)
         ChatSystemLib.PostOnChannel(ChatSystemLib.ChatChannel_Command, str, "")
     end
 
-    p = string.lower(params)
+    local p = string.lower(params)
 
     if not p or p == "" then
         print("Perspective")

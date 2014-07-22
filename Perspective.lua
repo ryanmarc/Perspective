@@ -4,7 +4,7 @@ require "Apollo"
 require "Quest"
 require "QuestLib"
 
-local os, type = os, type
+local os, type, pairs = os, type, pairs
 local table = table
 local math = math
 local string = string
@@ -700,7 +700,7 @@ function Perspective:OnTimerDraw()
         -- "behind" our closer pixies.
         for i = #pixies, 1, -1 do
             -- Get our next pixie
-            pixie = pixies[i]
+            local pixie = pixies[i]
 
             -- Drw the pixie
             self:DrawPixie(
@@ -1149,16 +1149,6 @@ function Perspective:UpdateUnit(ui, unit)
                 end
 
                 if ui.loaded then
-                    -- Find the index of the ui if its not passed in.
-                    if tbl and not index then
-                        for i, u in pairs(self[tbl]) do
-                            if u.id == ui.id then
-                                index = i
-                                break
-                            end
-                        end
-                    end
-
                     -- Update the players position and vector
                     local pPos = position
                     local pVec = Vector3.New(pPos.x, pPos.y, pPos.z)
@@ -2089,6 +2079,7 @@ function Perspective:UpdateActivationState(ui, unit)
     end
 
     if not category then
+        local path
         -- Get the player's path type
         if  PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Soldier then
             path = "soldier"
