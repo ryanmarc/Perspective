@@ -52,7 +52,7 @@ local activationStates = {
     { state = "Dye",                    category = "dye" },
     { state = "Bank",                   category = "bank" },
     { state = "GuildBank",              category = "guildBank" },
-    { state = "Dungeon",                category = "dungeon" }
+    { state = "Dungeon",                category = "dungeon" },
 }
 
 -- Used to fix units that do not show up as challenges
@@ -895,6 +895,8 @@ function Perspective:UpdateUnitCategory(ui, unit)
                         self:UpdateHarvest(ui, unit)
                     elseif type == "Pickup" then
                         self:UpdatePickup(ui, unit)
+                    elseif type == "Collectible" then
+                        self:UpdateCollectible(ui, unit)
                     elseif unit:GetLoot() then
                         self:UpdateLoot(ui, unit)
                     end
@@ -2032,6 +2034,15 @@ function Perspective:UpdateLoot(ui, unit)
         ui.category = "questLoot"
     end
 end
+
+function Perspective:UpdateCollectible(ui, unit)
+    local name = unit:GetName()
+
+    if name == "Secret Stash" and
+        not Options.db.profile[Options.profile].categories.collectible.disabled then
+            ui.category = "collectible"
+    end
+end    
 
 function Perspective:IsUnitBusy(unit)
     local state = unit:GetActivationState()
