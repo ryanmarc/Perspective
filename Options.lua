@@ -336,11 +336,11 @@ function PerspectiveOptions:LoadDefaults()
                         lineWidth = 10,
                         iconHeight = 72,
                         iconWidth = 72 },
-                    collectible = {
-                        title = "Collectible",
+                    secretStash = {
+                        title = "Secret Stash",
                         module = L.Module_Misc,
                         icon = "PerspectiveSprites:quest-interactive",
-                        max = 3,
+                        max = 1,
                         iconHeight = 36,
                         iconWidth = 36,
                         limitBy = "category",
