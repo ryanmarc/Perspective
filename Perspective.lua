@@ -22,7 +22,7 @@ local L = {}
 local activationStates = {
     { state = "Public Event",           category = "eventInteractable" },
     { state = "QuestReward",            category = "questReward" },
-    { state = "QuestNewMain",           category = "questNew" },
+    { state = "QuestNewMain",           category = "questNewMain" },
     { state = "QuestNew",               category = "questNew" },
     { state = "QuestNewRepeatable",     category = "questNew" },
     { state = "QuestNewTradeskill",     category = "questNew" },
