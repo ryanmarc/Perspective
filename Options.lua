@@ -346,6 +346,16 @@ function PerspectiveOptions:LoadDefaults()
                         limitBy = "category",
                         lineColor = "ffffff00",
                         iconColor = "ffffff00" },
+                    discovery = {
+                        title = "Discovery",
+                        module = L.Module_Misc,
+                        icon = "PerspectiveSprites:quest-interactive",
+                        max = 1,
+                        iconHeight = 36,
+                        iconWidth = 36,
+                        limitBy = "category",
+                        lineColor = "ffffff00",
+                        iconColor = "ffffff00" },
                     group = {
                         title = L.Category_Player_Group,
                         module = L.Module_Player,

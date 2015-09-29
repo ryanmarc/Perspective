@@ -889,6 +889,8 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     -- Attempt to categorize the unit by type.
                     local type = unit:GetType()
 
+                    self:UpdateDiscovery(ui, unit)
+
                     if type == "Player" then
                         self:UpdatePlayer(ui, unit)
                     elseif type == "NonPlayer" then
@@ -2005,6 +2007,7 @@ function Perspective:UpdateHarvest(ui, unit)
             ui.category = category
         end
     end
+
 end
 
 function Perspective:UpdatePickup(ui, unit)
@@ -2033,6 +2036,15 @@ function Perspective:UpdateCollectible(ui, unit)
     if name == "Secret Stash" and
         not Options.db.profile[Options.profile].categories.secretStash.disabled then
             ui.category = "secretStash"
+    end
+end    
+
+function Perspective:UpdateDiscovery(ui, unit)
+    local name = unit:GetName()
+
+    if name == "Discovery" and
+        not Options.db.profile[Options.profile].categories.discovery.disabled then
+            ui.category = "discovery"
     end
 end    
 
