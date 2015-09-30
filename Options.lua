@@ -188,8 +188,8 @@ function PerspectiveOptions:LoadDefaults()
                     offsetLines                             = true,
                     dottedLines                             = false,
                     draw                                    = 0,
-                    slow                                    = 1,
-                    fast                                    = 100,
+                    slow                                    = 2000,
+                    fast                                    = 200,
                     queue                                   = 0,
                     opacity                                 = 100,
                     convertedOpacity                        = "FF" },
@@ -628,14 +628,14 @@ function PerspectiveOptions:LoadDefaults()
                         max = 10,
                         iconHeight = 36,
                         iconWidth = 36 },   
-                    friendlyElite = {
-                        title = L.Category_NPC_Friendly_Elite,
+                    friendlyGroup = {
+                        title = L.Category_NPC_Friendly_Group,
                         module = L.Module_NPC,
                         disabled = true,
                         fontColor = "ff00ff00",
                         lineColor = "ff00ff00",
                         iconColor = "ff00ff00",
-                        icon = "PerspectiveSprites:NPC-Elite",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -655,7 +655,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 32,
-                        iconWidth = 32 },   
+                        iconWidth = 32 },  
                     neutralPrime = {
                         title = L.Category_NPC_Neutral_Prime,
                         module = L.Module_NPC,
@@ -668,16 +668,16 @@ function PerspectiveOptions:LoadDefaults()
                         showName = false,
                         showDistance = false,
                         max = 10,
-                        iconHeight = 36,
-                        iconWidth = 36 },   
-                    neutralElite = {
-                        title = L.Category_NPC_Neutral_Elite,
+                        iconHeight = 48,
+                        iconWidth = 48 },   
+                    neutralGroup = {
+                        title = L.Category_NPC_Neutral_Group,
                         module = L.Module_NPC,
                         disabled = true,
                         fontColor = "ffffff00",
                         lineColor = "ffffff00",
                         iconColor = "ffffff00",
-                        icon = "PerspectiveSprites:NPC-Elite",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -702,9 +702,9 @@ function PerspectiveOptions:LoadDefaults()
                     hostilePrime = {
                         title = L.Category_NPC_Hostile_Prime,
                         module = L.Module_NPC,
-                        fontColor = "ff96f4c4",
-                        lineColor = "ff96f4c4",
-                        iconColor = "ff96f4c4",
+                        fontColor = "fffa7e58",
+                        lineColor = "fffa7e58",
+                        iconColor = "fffa7e58",
                         icon = "PerspectiveSprites:NPC-Prime",
                         showLines = false,
                         showName = false,
@@ -721,6 +721,22 @@ function PerspectiveOptions:LoadDefaults()
                         lineColor = "fffa7e58",
                         iconColor = "fffa7e58",
                         icon = "PerspectiveSprites:NPC-Elite",
+                        showLines = true,
+                        showName = false,
+                        showDistance = false,
+                        max = 10,
+                        maxLines = 10,
+                        iconHeight = 48,
+                        iconWidth = 48,
+                        rangeIcon = true,
+                        rangeColor = "ffff00ff" },
+                    hostileGroup = {
+                        title = L.Category_NPC_Hostile_Group,
+                        module = L.Module_NPC,
+                        fontColor = "fffa7e58",
+                        lineColor = "fffa7e58",
+                        iconColor = "fffa7e58",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -1294,14 +1310,17 @@ function PerspectiveOptions:ShowTargetInfo()
         local buffs = target:GetBuffs()
 
         appendLine("Name: " .. target:GetName())
+        appendLine("Title: " .. target:GetTitle())
         appendLine("ID: " .. target:GetId())
         appendLine("IsDead: " .. tostring(target:IsDead()))
         appendLine("IsValid: " .. tostring(target:IsValid()))
         appendLine("Disposition: " .. tostring(target:GetDispositionTo(GameLib.GetPlayerUnit())))
         appendLine("Difficulty: " .. tostring(target:GetDifficulty()))
         appendLine("Eliteness: " .. tostring(target:GetEliteness()))
+        appendLine("GroupValue: " .. tostring(target:GetGroupValue()))
+        appendLine("Rank: " .. tostring(target:GetRank()))
         appendLine("Faction: " .. tostring(target:GetFaction()))
-        appendLine("Title: " .. tostring(target:GetTitle()))
+        appendLine("Affiliation: " .. tostring(target:GetAffiliationName()))
         appendLine("IsPvpFlagged: " .. tostring(target:IsPvpFlagged()))
         appendLine("Zone: " .. zone.strName .. " [" .. zone.id .. "]")
         appendLine("Type: " .. target:GetType())

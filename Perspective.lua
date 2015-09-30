@@ -117,7 +117,7 @@ function Perspective:OnInitialize()
     self.timers     = {
         draw        = { elapsed = 0, divisor = 1000,    func = "OnTimerDraw" },
         fast        = { elapsed = 0, divisor = 1000,    func = "OnTimerFast" },
-        slow        = { elapsed = 0, divisor = 1,       func = "OnTimerSlow" },
+        slow        = { elapsed = 0, divisor = 1000,    func = "OnTimerSlow" },
         queue       = { elapsed = 0, divisor = 1000,    func = "OnTimerQueue", time = 10 } }
 
     for index, state in pairs(activationStates) do
@@ -920,23 +920,38 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     disposition = "neutral"
                 end
 
+                -- Rank: 
+                --   Rank 0: Fodder (1st Skull)
+                --   Rank 1: Minion (1st Skull)
+                --   Rank 2: Standard (2nd Skull)
+                --   Rank 3: Champion (2nd Skull)
+                --   Rank 4: Superior (3rd Skull)
+                --   Rank 5: Prime (3rd Skull)
+
+                -- Eliteness / GroupValue: 
+                --   Eliteness 0, GroupValue 0: 1 Player
+                --   Eliteness 1, GroupValue 5: 5 Player
+                --   Eliteness 2, GroupValue 20: 20 Player
+
+                -- Rare Mobs:
+                --   AffiliationName: Elite Champion
+
                 -- Not sure how accurate this is
-                -- Rank 1:          Minion
-                -- Rank 2:          Grunt
-                -- Rank 3:          Challenger
-                -- Rank 4:          Superior
-                -- Rank 5:          Prime
                 -- Difficulty 1:    Minion, Grunt, Challenger
                 -- Difficulty 3:    Prime
                 -- Difficulty 4:    5 Man? - XT Destroyer (Galeras)
                 -- Difficulty 5:    10 Man?
                 -- Difficulty 6:    20 Man? - Doomthorn the Ancient (Galeras)
+
                 -- Eliteness 1:     5 Man + (Dungeons?)
                 -- Eliteness 2:     20 Man? - Doomthorn the Ancient (Galeras)
-                if unit:GetDifficulty() == 3 then
+
+                if unit:GetAffiliationName() == "Elite Champion" and disposition == "hostile"then
+                    difficulty = "Elite"
+                elseif unit:GetGroupValue() > 1 then
+                    difficulty = "Group"
+                elseif unit:GetRank() >= 4 then
                     difficulty = "Prime"
-                elseif unit:GetEliteness() >= 1 then
-                    difficulty =  "Elite"
                 end
 
                 local npcType = disposition .. difficulty
