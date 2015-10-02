@@ -946,7 +946,7 @@ function Perspective:UpdateUnitCategory(ui, unit)
                 -- Eliteness 1:     5 Man + (Dungeons?)
                 -- Eliteness 2:     20 Man? - Doomthorn the Ancient (Galeras)
 
-                if unit:GetAffiliationName() == "Elite Champion" and disposition == "hostile"then
+                if unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion and disposition == "hostile"then
                     difficulty = "Elite"
                 elseif unit:GetGroupValue() > 1 then
                     difficulty = "Group"

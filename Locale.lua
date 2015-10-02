@@ -180,6 +180,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Unit_Walatiki_Mask_Exile                 = "Exile Moodie Mask"
     locale.Unit_Datacube                            = "DATACUBE"
     locale.Unit_Shipwrecked_Victim                  = "Shipwrecked Victim"
+    locale.Unit_AffiliationName_EliteChampion       = "Elite Champion"
 
     -- Buffs, dont change
     locale.Debuff_Moodie_Mask_Neutral               = "Neutral - Moodie Mask Carrier"
