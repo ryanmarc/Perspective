@@ -13,7 +13,7 @@ local MAX_QUEUE_SIZE = 10
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
-local Perspective = GeminiAddon:NewAddon("Perspective", false, {})
+local Perspective = GeminiAddon:NewAddon("NewPerspective", false, {})
 
 local Options
 
@@ -87,9 +87,9 @@ local elapsed = 0
 
 function Perspective:OnInitialize()
     -- Load our localization
-    L = GeminiAddon:GetAddon("PerspectiveLocale"):LoadLocalization()
+    L = GeminiAddon:GetAddon("NewPerspectiveLocale"):LoadLocalization()
 
-    Options = GeminiAddon:GetAddon("PerspectiveOptions")
+    Options = GeminiAddon:GetAddon("NewPerspectiveOptions")
 
     Apollo.LoadSprites("PerspectiveSprites.xml")
 
@@ -117,7 +117,7 @@ function Perspective:OnInitialize()
     self.timers     = {
         draw        = { elapsed = 0, divisor = 1000,    func = "OnTimerDraw" },
         fast        = { elapsed = 0, divisor = 1000,    func = "OnTimerFast" },
-        slow        = { elapsed = 0, divisor = 1,       func = "OnTimerSlow" },
+        slow        = { elapsed = 0, divisor = 1000,    func = "OnTimerSlow" },
         queue       = { elapsed = 0, divisor = 1000,    func = "OnTimerQueue", time = 10 } }
 
     for index, state in pairs(activationStates) do
@@ -889,6 +889,8 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     -- Attempt to categorize the unit by type.
                     local type = unit:GetType()
 
+                    self:UpdateDiscovery(ui, unit)
+
                     if type == "Player" then
                         self:UpdatePlayer(ui, unit)
                     elseif type == "NonPlayer" then
@@ -918,23 +920,38 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     disposition = "neutral"
                 end
 
+                -- Rank: 
+                --   Rank 0: Fodder (1st Skull)
+                --   Rank 1: Minion (1st Skull)
+                --   Rank 2: Standard (2nd Skull)
+                --   Rank 3: Champion (2nd Skull)
+                --   Rank 4: Superior (3rd Skull)
+                --   Rank 5: Prime (3rd Skull)
+
+                -- Eliteness / GroupValue: 
+                --   Eliteness 0, GroupValue 0: 1 Player
+                --   Eliteness 1, GroupValue 5: 5 Player
+                --   Eliteness 2, GroupValue 20: 20 Player
+
+                -- Rare Mobs:
+                --   AffiliationName: Elite Champion
+
                 -- Not sure how accurate this is
-                -- Rank 1:          Minion
-                -- Rank 2:          Grunt
-                -- Rank 3:          Challenger
-                -- Rank 4:          Superior
-                -- Rank 5:          Prime
                 -- Difficulty 1:    Minion, Grunt, Challenger
                 -- Difficulty 3:    Prime
                 -- Difficulty 4:    5 Man? - XT Destroyer (Galeras)
                 -- Difficulty 5:    10 Man?
                 -- Difficulty 6:    20 Man? - Doomthorn the Ancient (Galeras)
+
                 -- Eliteness 1:     5 Man + (Dungeons?)
                 -- Eliteness 2:     20 Man? - Doomthorn the Ancient (Galeras)
-                if unit:GetDifficulty() == 3 then
+
+                if unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion and disposition == "hostile"then
+                    difficulty = "Elite"
+                elseif unit:GetGroupValue() > 1 then
+                    difficulty = "Group"
+                elseif unit:GetRank() >= 4 then
                     difficulty = "Prime"
-                elseif unit:GetEliteness() >= 1 then
-                    difficulty =  "Elite"
                 end
 
                 local npcType = disposition .. difficulty
@@ -2005,6 +2022,7 @@ function Perspective:UpdateHarvest(ui, unit)
             ui.category = category
         end
     end
+
 end
 
 function Perspective:UpdatePickup(ui, unit)
@@ -2033,6 +2051,15 @@ function Perspective:UpdateCollectible(ui, unit)
     if name == "Secret Stash" and
         not Options.db.profile[Options.profile].categories.secretStash.disabled then
             ui.category = "secretStash"
+    end
+end    
+
+function Perspective:UpdateDiscovery(ui, unit)
+    local name = unit:GetName()
+
+    if name == "Discovery" and
+        not Options.db.profile[Options.profile].categories.discovery.disabled then
+            ui.category = "discovery"
     end
 end    
 

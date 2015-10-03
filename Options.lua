@@ -8,7 +8,7 @@ local pairs, type, tostring, tonumber = pairs, type, tostring, tonumber
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
-local PerspectiveOptions = GeminiAddon:NewAddon("PerspectiveOptions", "Perspective")
+local PerspectiveOptions = GeminiAddon:NewAddon("NewPerspectiveOptions", "NewPerspective")
 
 local Perspective
 
@@ -69,11 +69,11 @@ function PerspectiveOptions:OnInitialize()
     self.profile = "default"
 
     -- Load our localization
-    L = GeminiAddon:GetAddon("PerspectiveLocale"):LoadLocalization()
+    L = GeminiAddon:GetAddon("NewPerspectiveLocale"):LoadLocalization()
 
     JSON = Apollo.GetPackage("Lib:dkJSON-2.5").tPackage
 
-    Perspective = GeminiAddon:GetAddon("Perspective")
+    Perspective = GeminiAddon:GetAddon("NewPerspective")
 
     -- Load our default values
     defaults = self:LoadDefaults()
@@ -117,6 +117,8 @@ function PerspectiveOptions:OnInitialize()
     Apollo.RegisterSlashCommand("pti", "ShowTargetInfo", self)
     Apollo.RegisterSlashCommand("deadzone", "DeadzoneInfo", self)
     Apollo.RegisterSlashCommand("perspective", "OnSlashCommand", self)
+    Apollo.RegisterSlashCommand("newperspective", "OnSlashCommand", self)
+    Apollo.RegisterSlashCommand("newp", "OnSlashCommand", self)
 end
 
 function PerspectiveOptions:OnSlashCommand(cmd, params)
@@ -127,13 +129,13 @@ function PerspectiveOptions:OnSlashCommand(cmd, params)
     local p = string.lower(params)
 
     if not p or p == "" then
-        print("Perspective")
+        print("NewPerspective")
         print("To display the configuration window use:")
-        print("/perspective show")
+        print("/newp show")
         print("To load a profile from another character use:")
-        print("/perspective profile Character - Server")
-        print("Example: Where Credit is the character and Avatus is the server.")
-        print("/perspective profile Credit - Avatus")
+        print("/newp profile Character - Server")
+        print("Example: Where Soey Flamepaw is the character and Jabbit is the server.")
+        print("/newp profile Soey Flamepaw - Jabbit")
     elseif p == "show" then
         self:ShowOptions()
     elseif string.sub(params, 1, 7) == "profile" then
@@ -188,8 +190,8 @@ function PerspectiveOptions:LoadDefaults()
                     offsetLines                             = true,
                     dottedLines                             = false,
                     draw                                    = 0,
-                    slow                                    = 1,
-                    fast                                    = 100,
+                    slow                                    = 2000,
+                    fast                                    = 200,
                     queue                                   = 0,
                     opacity                                 = 100,
                     convertedOpacity                        = "FF" },
@@ -346,6 +348,17 @@ function PerspectiveOptions:LoadDefaults()
                         limitBy = "category",
                         lineColor = "ffffff00",
                         iconColor = "ffffff00" },
+                    discovery = {
+                        title = "Discovery",
+                        module = L.Module_Misc,
+                        icon = "PerspectiveSprites:quest-loot",
+                        maxLines = 4,
+                        max = 4,
+                        iconHeight = 48,
+                        iconWidth = 48,
+                        limitBy = "category",
+                        lineColor = "ffff5700",
+                        iconColor = "ffff5700" },
                     group = {
                         title = L.Category_Player_Group,
                         module = L.Module_Player,
@@ -618,14 +631,14 @@ function PerspectiveOptions:LoadDefaults()
                         max = 10,
                         iconHeight = 36,
                         iconWidth = 36 },   
-                    friendlyElite = {
-                        title = L.Category_NPC_Friendly_Elite,
+                    friendlyGroup = {
+                        title = L.Category_NPC_Friendly_Group,
                         module = L.Module_NPC,
                         disabled = true,
                         fontColor = "ff00ff00",
                         lineColor = "ff00ff00",
                         iconColor = "ff00ff00",
-                        icon = "PerspectiveSprites:NPC-Elite",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -645,7 +658,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 32,
-                        iconWidth = 32 },   
+                        iconWidth = 32 },  
                     neutralPrime = {
                         title = L.Category_NPC_Neutral_Prime,
                         module = L.Module_NPC,
@@ -658,16 +671,16 @@ function PerspectiveOptions:LoadDefaults()
                         showName = false,
                         showDistance = false,
                         max = 10,
-                        iconHeight = 36,
-                        iconWidth = 36 },   
-                    neutralElite = {
-                        title = L.Category_NPC_Neutral_Elite,
+                        iconHeight = 48,
+                        iconWidth = 48 },   
+                    neutralGroup = {
+                        title = L.Category_NPC_Neutral_Group,
                         module = L.Module_NPC,
                         disabled = true,
                         fontColor = "ffffff00",
                         lineColor = "ffffff00",
                         iconColor = "ffffff00",
-                        icon = "PerspectiveSprites:NPC-Elite",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -692,9 +705,9 @@ function PerspectiveOptions:LoadDefaults()
                     hostilePrime = {
                         title = L.Category_NPC_Hostile_Prime,
                         module = L.Module_NPC,
-                        fontColor = "ff96f4c4",
-                        lineColor = "ff96f4c4",
-                        iconColor = "ff96f4c4",
+                        fontColor = "fff4cbbf",
+                        lineColor = "fff4cbbf",
+                        iconColor = "fff4cbbf",
                         icon = "PerspectiveSprites:NPC-Prime",
                         showLines = false,
                         showName = false,
@@ -711,6 +724,22 @@ function PerspectiveOptions:LoadDefaults()
                         lineColor = "fffa7e58",
                         iconColor = "fffa7e58",
                         icon = "PerspectiveSprites:NPC-Elite",
+                        showLines = false,
+                        showName = true,
+                        showDistance = false,
+                        max = 10,
+                        maxLines = 10,
+                        iconHeight = 48,
+                        iconWidth = 48,
+                        rangeIcon = true,
+                        rangeColor = "ffff00ff" },
+                    hostileGroup = {
+                        title = L.Category_NPC_Hostile_Group,
+                        module = L.Module_NPC,
+                        fontColor = "fffa7e58",
+                        lineColor = "fffa7e58",
+                        iconColor = "fffa7e58",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -1284,14 +1313,17 @@ function PerspectiveOptions:ShowTargetInfo()
         local buffs = target:GetBuffs()
 
         appendLine("Name: " .. target:GetName())
+        appendLine("Title: " .. target:GetTitle())
         appendLine("ID: " .. target:GetId())
         appendLine("IsDead: " .. tostring(target:IsDead()))
         appendLine("IsValid: " .. tostring(target:IsValid()))
         appendLine("Disposition: " .. tostring(target:GetDispositionTo(GameLib.GetPlayerUnit())))
         appendLine("Difficulty: " .. tostring(target:GetDifficulty()))
         appendLine("Eliteness: " .. tostring(target:GetEliteness()))
+        appendLine("GroupValue: " .. tostring(target:GetGroupValue()))
+        appendLine("Rank: " .. tostring(target:GetRank()))
         appendLine("Faction: " .. tostring(target:GetFaction()))
-        appendLine("Title: " .. tostring(target:GetTitle()))
+        appendLine("Affiliation: " .. tostring(target:GetAffiliationName()))
         appendLine("IsPvpFlagged: " .. tostring(target:IsPvpFlagged()))
         appendLine("Zone: " .. zone.strName .. " [" .. zone.id .. "]")
         appendLine("Type: " .. target:GetType())
@@ -1391,7 +1423,7 @@ function PerspectiveOptions:GetPathIcon()
 end
 
 function PerspectiveOptions:OnInterfaceMenuListHasLoaded()
-    Event_FireGenericEvent("InterfaceMenuList_NewAddOn", "Perspective", {"InterfaceMenuClicked", "", "IconSprites:Icon_Windows32_UI_CRB_InterfaceMenu_Map"})
+    Event_FireGenericEvent("InterfaceMenuList_NewAddOn", "NewPerspective", {"InterfaceMenuClicked", "", "IconSprites:Icon_Windows32_UI_CRB_InterfaceMenu_Map"})
 end
 
 function PerspectiveOptions:OnInterfaceMenuClicked(arg1, arg2, arg3)
@@ -1403,7 +1435,7 @@ function PerspectiveOptions:OnInterfaceMenuClicked(arg1, arg2, arg3)
 end
 
 function PerspectiveOptions:OnWindowManagementReady()
-  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.Options, strName = "Perspective-Options"})
+  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.Options, strName = "NewPerspective-Options"})
 end
 
 ---------------------------------------------------------------------------------------------------
