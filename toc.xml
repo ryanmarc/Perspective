@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Addon Author="SoeyFlamepaw, Crowstrum" APIVersion="11" Name="NewPerspective" Description="Perspective is an addon that tracks and displays units on the user&apos;s screen." Version="1.0">
+<Addon Author="SoeyFlamepaw,Crowstrum" APIVersion="11" Name="Perspective" Description="">
     <Script Name="Libs/GeminiAddon.lua"/>
     <Script Name="Libs/GeminiDB-1.0.lua"/>
     <Script Name="Libs/LibJSON/LibJSON-2.5.lua"/>

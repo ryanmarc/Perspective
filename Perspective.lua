@@ -13,7 +13,7 @@ local MAX_QUEUE_SIZE = 10
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
-local Perspective = GeminiAddon:NewAddon("NewPerspective", false, {})
+local Perspective = GeminiAddon:NewAddon("Perspective", false, {})
 
 local Options
 
@@ -87,9 +87,9 @@ local elapsed = 0
 
 function Perspective:OnInitialize()
     -- Load our localization
-    L = GeminiAddon:GetAddon("NewPerspectiveLocale"):LoadLocalization()
+    L = GeminiAddon:GetAddon("PerspectiveLocale"):LoadLocalization()
 
-    Options = GeminiAddon:GetAddon("NewPerspectiveOptions")
+    Options = GeminiAddon:GetAddon("PerspectiveOptions")
 
     Apollo.LoadSprites("PerspectiveSprites.xml")
 

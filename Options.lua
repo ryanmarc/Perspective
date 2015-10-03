@@ -8,7 +8,7 @@ local pairs, type, tostring, tonumber = pairs, type, tostring, tonumber
 
 local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
-local PerspectiveOptions = GeminiAddon:NewAddon("NewPerspectiveOptions", "NewPerspective")
+local PerspectiveOptions = GeminiAddon:NewAddon("PerspectiveOptions", "Perspective")
 
 local Perspective
 
@@ -69,11 +69,11 @@ function PerspectiveOptions:OnInitialize()
     self.profile = "default"
 
     -- Load our localization
-    L = GeminiAddon:GetAddon("NewPerspectiveLocale"):LoadLocalization()
+    L = GeminiAddon:GetAddon("PerspectiveLocale"):LoadLocalization()
 
     JSON = Apollo.GetPackage("Lib:dkJSON-2.5").tPackage
 
-    Perspective = GeminiAddon:GetAddon("NewPerspective")
+    Perspective = GeminiAddon:GetAddon("Perspective")
 
     -- Load our default values
     defaults = self:LoadDefaults()
@@ -117,8 +117,6 @@ function PerspectiveOptions:OnInitialize()
     Apollo.RegisterSlashCommand("pti", "ShowTargetInfo", self)
     Apollo.RegisterSlashCommand("deadzone", "DeadzoneInfo", self)
     Apollo.RegisterSlashCommand("perspective", "OnSlashCommand", self)
-    Apollo.RegisterSlashCommand("newperspective", "OnSlashCommand", self)
-    Apollo.RegisterSlashCommand("newp", "OnSlashCommand", self)
 end
 
 function PerspectiveOptions:OnSlashCommand(cmd, params)
@@ -129,13 +127,13 @@ function PerspectiveOptions:OnSlashCommand(cmd, params)
     local p = string.lower(params)
 
     if not p or p == "" then
-        print("NewPerspective")
+        print("Perspective")
         print("To display the configuration window use:")
-        print("/newp show")
+        print("/perspective show")
         print("To load a profile from another character use:")
-        print("/newp profile Character - Server")
-        print("Example: Where Soey Flamepaw is the character and Jabbit is the server.")
-        print("/newp profile Soey Flamepaw - Jabbit")
+        print("/perspective profile Character - Server")
+        print("Example: Where Credit is the character and Avatus is the server.")
+        print("/perspective profile Credit - Avatus")
     elseif p == "show" then
         self:ShowOptions()
     elseif string.sub(params, 1, 7) == "profile" then
@@ -351,14 +349,13 @@ function PerspectiveOptions:LoadDefaults()
                     discovery = {
                         title = "Discovery",
                         module = L.Module_Misc,
-                        icon = "PerspectiveSprites:quest-loot",
-                        maxLines = 4,
-                        max = 4,
-                        iconHeight = 48,
-                        iconWidth = 48,
+                        icon = "PerspectiveSprites:quest-interactive",
+                        max = 1,
+                        iconHeight = 36,
+                        iconWidth = 36,
                         limitBy = "category",
-                        lineColor = "ffff5700",
-                        iconColor = "ffff5700" },
+                        lineColor = "ffffff00",
+                        iconColor = "ffffff00" },
                     group = {
                         title = L.Category_Player_Group,
                         module = L.Module_Player,
@@ -1423,7 +1420,7 @@ function PerspectiveOptions:GetPathIcon()
 end
 
 function PerspectiveOptions:OnInterfaceMenuListHasLoaded()
-    Event_FireGenericEvent("InterfaceMenuList_NewAddOn", "NewPerspective", {"InterfaceMenuClicked", "", "IconSprites:Icon_Windows32_UI_CRB_InterfaceMenu_Map"})
+    Event_FireGenericEvent("InterfaceMenuList_NewAddOn", "Perspective", {"InterfaceMenuClicked", "", "IconSprites:Icon_Windows32_UI_CRB_InterfaceMenu_Map"})
 end
 
 function PerspectiveOptions:OnInterfaceMenuClicked(arg1, arg2, arg3)
@@ -1435,7 +1432,7 @@ function PerspectiveOptions:OnInterfaceMenuClicked(arg1, arg2, arg3)
 end
 
 function PerspectiveOptions:OnWindowManagementReady()
-  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.Options, strName = "NewPerspective-Options"})
+  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.Options, strName = "Perspective-Options"})
 end
 
 ---------------------------------------------------------------------------------------------------
