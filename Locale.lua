@@ -1,7 +1,7 @@
 
 require "Apollo"
 
-local PerspectiveLocale = Apollo.GetPackage("Gemini:Addon-1.1").tPackage:NewAddon("PerspectiveLocale", false)
+local PerspectiveLocale = Apollo.GetPackage("Gemini:Addon-1.1").tPackage:NewAddon("NewPerspectiveLocale", false)
 
 function PerspectiveLocale:OnInitialize()
     self.locale = self:LoadLocalization()
@@ -290,10 +290,10 @@ function PerspectiveLocale:LoadLocalization()
     locale.UI_Editor_DefaultButton_Tooltip          = "Reset this category to the default settings."
 
     -- UI Dialog Titles
-    locale.UI_Dialog_Options                        = "Perspective Options"
-    locale.UI_Dialog_PTI_Header                     = "Perspective Target Information"
-    locale.UI_Dialog_Export_Header                  = "Perspective Settings Export"
-    locale.UI_Dialog_Import_Header                  = "Perspective Settings Import"
+    locale.UI_Dialog_Options                        = "NewPerspective Options"
+    locale.UI_Dialog_PTI_Header                     = "NewPerspective Target Information"
+    locale.UI_Dialog_Export_Header                  = "NewPerspective Settings Export"
+    locale.UI_Dialog_Import_Header                  = "NewPerspective Settings Import"
 
     -- UI Dialog Buttons
     locale.UI_Dialog_PTI_Button_Text                = "Get Current Target"
@@ -303,8 +303,8 @@ function PerspectiveLocale:LoadLocalization()
     locale.UI_Dialog_PTI_Error                      = "Please select a target first."
 
     -- UI Settings Page
-    locale.UI_Settings_DisableCheck_Text            = "Disable Perspective"
-    locale.UI_Settings_DisableCheck_Tooltip         = "Disabling Perspective turns it completely off but preserves all settings."
+    locale.UI_Settings_DisableCheck_Text            = "Disable NewPerspective"
+    locale.UI_Settings_DisableCheck_Tooltip         = "Disabling NewPerspective turns it completely off but preserves all settings."
     locale.UI_Settings_DrawSlider_Text              = "Redraw Delay Time:"
     locale.UI_Settings_DrawSlider_Tooltip           = "The amount of time between screen redraws."
     locale.UI_Settings_FastSlider_Text              = "Update delay at close range"
@@ -560,7 +560,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.UI_Options_NewButton_Text                = "Nouvelle catégorie"
         locale.UI_Options_NewButton_Tooltip             = "Crée une nouvelle catégorie."
         locale.UI_Options_DefaultButton_Text            = "RÉINITIALISER"
-        locale.UI_Options_DefaultButton_Tooltip         = "Cliquez avec le bouton de droite pour réinitialiser TOUS les paramètres de Perspective à leurs valeurs par défaut."
+        locale.UI_Options_DefaultButton_Tooltip         = "Cliquez avec le bouton de droite pour réinitialiser TOUS les paramètres de NewPerspective à leurs valeurs par défaut."
         locale.UI_Options_ExportButton_Text             = "Exporter"
         locale.UI_Options_ExportButton_Tooltip          = "Exportez votre configuration actuelle."
         locale.UI_Options_ImportButton_Text             = "Importer"
@@ -639,10 +639,10 @@ function PerspectiveLocale:LoadLocalization()
         locale.UI_Editor_DefaultButton_Tooltip          = "Rénitialiser cette catégorie aux valeurs par défaut."
 
         -- UI Dialog Titles
-        locale.UI_Dialog_Options                        = "Perspective - Options"
-        locale.UI_Dialog_PTI_Header                     = "Perspective - Information sur la cible"
-        locale.UI_Dialog_Export_Header                  = "Perspective - Export de profil"
-        locale.UI_Dialog_Import_Header                  = "Perspective - Import de profil"
+        locale.UI_Dialog_Options                        = "NewPerspective - Options"
+        locale.UI_Dialog_PTI_Header                     = "NewPerspective - Information sur la cible"
+        locale.UI_Dialog_Export_Header                  = "NewPerspective - Export de profil"
+        locale.UI_Dialog_Import_Header                  = "NewPerspective - Import de profil"
 
         -- UI Dialog Buttons
         locale.UI_Dialog_PTI_Button_Text                = "Obtenir la cible courante"
@@ -652,8 +652,8 @@ function PerspectiveLocale:LoadLocalization()
         locale.UI_Dialog_PTI_Error                      = "Veuillez d'abord sélectionner une cible."
 
         -- UI Settings Page
-        locale.UI_Settings_DisableCheck_Text            = "Désactiver Perspective"
-        locale.UI_Settings_DisableCheck_Tooltip         = "Désactiver Perspective suspend les fonctionnalités mais préserve toutes les options de configuration."
+        locale.UI_Settings_DisableCheck_Text            = "Désactiver NewPerspective"
+        locale.UI_Settings_DisableCheck_Tooltip         = "Désactiver NewPerspective suspend les fonctionnalités mais préserve toutes les options de configuration."
         locale.UI_Settings_DrawSlider_Text              = "Délai minimal avant de redessiner"
         locale.UI_Settings_DrawSlider_Tooltip           = "Controle le délai minimal avant que les lignes et icones soient redessinnées."
         locale.UI_Settings_FastSlider_Text              = "Délai de mise à jour à courte portéee"
