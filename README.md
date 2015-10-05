@@ -1,5 +1,5 @@
-NewPerspective
-==============
+Perspective
+===========
 
 The original author of this add-on has seemingly abandoned the project, the original outdated add-on can be found [here](http://www.curse.com/ws-addons/wildstar/222046-perspective).
 
