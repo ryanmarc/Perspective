@@ -231,11 +231,6 @@ function Perspective:Start()
         
         -- Load the timers
         self:SetTimers()
-
-        -- If we already have a focus target at this point (that could happen for example after a /reloadui), then fire up the OnAlternateTargetUnitChanged handler.
-        if GameLib.GetPlayerUnit():GetAlternateTarget() ~= nil then
-          self:OnAlternateTargetUnitChanged(GameLib.GetPlayerUnit():GetAlternateTarget())
-        end
     end
 
     self:UpdateZoneSpellEffects()
@@ -1978,12 +1973,15 @@ function Perspective:UpdatePlayer(ui, unit)
             elseif not Options.db.profile[Options.profile].categories.group.disabled then
                 ui.category = "group"
             end
+        elseif unit:IsAccountFriend() and
+            not Options.db.profile[Options.profile].categories.accountFriend.disabled then
+            ui.category = "accountFriend"
         -- Check to see if the unit is in our guild
         elseif  player and player:GetGuildName() and 
-                unit:GetGuildName() == player:GetGuildName() and
-                not Options.db.profile[Options.profile].categories.guild.disabled then
+            unit:GetGuildName() == player:GetGuildName() and
+            not Options.db.profile[Options.profile].categories.guild.disabled then
             ui.category = "guild"
-        elseif unit:IsFriend() or unit:IsAccountFriend() and
+        elseif unit:IsFriend() and
             not Options.db.profile[Options.profile].categories.friend.disabled then
             ui.category = "friend"
         elseif unit:IsRival() and

@@ -421,6 +421,14 @@ function PerspectiveOptions:LoadDefaults()
                         iconHeight = 36,
                         showLines = false,
                         disabled = true },
+                    accountFriend = {
+                        title = L.Category_Player_AccountFriend,
+                        module = L.Module_Player,
+                        icon = "IconSprites:Icon_Windows_UI_CRB_Friend",
+                        iconHeight = 36,
+                        iconWidth = 36,
+                        showLines = false },
+                        iconColor = "ff8dffa4",
                     friend = {
                         title = L.Category_Player_Friend,
                         module = L.Module_Player,
@@ -780,10 +788,10 @@ function PerspectiveOptions:LoadDefaults()
                         title = L.Category_Quest_Start,
                         module = L.Module_Quest,
                         icon = "PerspectiveOptions:Quest-Available",
+                        showLines = false,
                         iconWidth = 42,
                         iconHeight = 36,
-                        iconColor = "88ffffff",
-                        lineColor = "8800ff00" },
+                        lineColor = "ff00ff00" },
                     questNewMain = {
                         title = L.Category_Quest_Start_Main,
                         module = L.Module_Quest,
@@ -802,6 +810,7 @@ function PerspectiveOptions:LoadDefaults()
                         title = L.Category_Quest_Start_Tradeskill,
                         module = L.Module_Quest,
                         icon = "PerspectiveOptions:Quest-Available-Repeatable",
+                        showLines = false,
                         iconWidth = 42,
                         iconHeight = 36,
                         iconColor = "88ffffff",
@@ -1345,6 +1354,8 @@ function PerspectiveOptions:ShowTargetInfo()
         appendLine("Rank: " .. tostring(target:GetRank()))
         appendLine("Faction: " .. tostring(target:GetFaction()))
         appendLine("Affiliation: " .. tostring(target:GetAffiliationName()))
+        appendLine("GuildName: " .. tostring(target:GetGuildName()))
+        appendLine("GuildType: " .. tostring(target:GetGuildType()))
         appendLine("IsPvpFlagged: " .. tostring(target:IsPvpFlagged()))
         appendLine("Zone: " .. zone.strName .. " [" .. zone.id .. "]")
         appendLine("Type: " .. target:GetType())
