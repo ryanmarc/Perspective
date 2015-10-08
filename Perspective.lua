@@ -231,6 +231,11 @@ function Perspective:Start()
         
         -- Load the timers
         self:SetTimers()
+
+        -- If we already have a focus target at this point (that could happen for example after a /reloadui), then fire up the OnAlternateTargetUnitChanged handler.
+        if GameLib.GetPlayerUnit():GetAlternateTarget() ~= nil then
+          self:OnAlternateTargetUnitChanged(GameLib.GetPlayerUnit():GetAlternateTarget())
+        end
     end
 
     self:UpdateZoneSpellEffects()
