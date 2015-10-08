@@ -52,9 +52,10 @@ function PerspectiveLocale:LoadLocalization()
 
     locale.Category_Quest_Objective                 = "Objective"
     locale.Category_Quest_Interactable              = "Interactable"
-    locale.Category_Quest_Start                     = "Start"
+    locale.Category_Quest_Start                     = "Start (Task)"
     locale.Category_Quest_Start_Main                = "Start (Main)"
     locale.Category_Quest_Start_Repeatable          = "Start (Repeatable)"
+    locale.Category_Quest_Start_Tradeskill          = "Start (Tradeskill)"
     locale.Category_Quest_TalkTo                    = "Talk To"
     locale.Category_Quest_Complete                  = "Complete"
     locale.Category_Quest_Location                  = "Quest Location"

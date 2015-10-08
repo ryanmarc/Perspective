@@ -27,7 +27,7 @@ local activationStates = {
     { state = "QuestNewRepeatable",     category = "questNewRepeatable" },
     { state = "QuestNewDaily",          category = "questNewRepeatable" },
     { state = "QuestNewWeekly",         category = "questNewRepeatable" },
-    { state = "QuestNewTradeskill",     category = "questNew" },
+    { state = "QuestNewTradeskill",     category = "questNewTradeskill" },
     --{ state = "QuestTarget",          category = "questInteractable" },
     { state = "TalkTo",                 category = "questTalkTo" },
     { state = "Datacube",               category = "lore" },

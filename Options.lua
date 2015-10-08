@@ -798,6 +798,14 @@ function PerspectiveOptions:LoadDefaults()
                         iconWidth = 42,
                         iconHeight = 36,
                         lineColor = "ff00ff00" },
+                    questNewTradeskill = {
+                        title = L.Category_Quest_Start_Tradeskill,
+                        module = L.Module_Quest,
+                        icon = "PerspectiveOptions:Quest-Available-Repeatable",
+                        iconWidth = 42,
+                        iconHeight = 36,
+                        iconColor = "88ffffff",
+                        lineColor = "8800ff00" },
                     questTalkTo = {
                         title = L.Category_Quest_TalkTo,
                         module = L.Module_Quest,
