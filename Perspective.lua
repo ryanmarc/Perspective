@@ -22,7 +22,7 @@ local L = {}
 local activationStates = {
     { state = "Public Event",           category = "eventInteractable" },
     { state = "QuestReward",            category = "questReward" },
-    { state = "QuestNewMain",           category = "questNew" },
+    { state = "QuestNewMain",           category = "questNewMain" },
     { state = "QuestNew",               category = "questNew" },
     { state = "QuestNewRepeatable",     category = "questNew" },
     { state = "QuestNewTradeskill",     category = "questNew" },
@@ -1010,24 +1010,24 @@ function Perspective:UpdateUnitInfo(ui, unit)
     end
 end
 
-function Perspective:UpdateOptions(ui, full)
-    local function updateOptions(ui)
-        if ui.category then
-            -- Loads the options for the ui
-            for k, v in pairs(Options.db.profile[Options.profile].categories.default) do
-                ui[k] = Options:GetOptionValue(ui, k)
-            end
+local function updateOptions(ui)
+    if ui.category then
+        -- Loads the options for the ui
+        for k, v in pairs(Options.db.profile[Options.profile].categories.default) do
+            ui[k] = Options:GetOptionValue(ui, k)
+        end
 
-            -- Determines if this is a named unit with a set display as value.
-            ui.display = ui.named  and Options.db.profile[Options.profile].names[ui.name].display or ui.display
-            
-            -- Lets the adodn know we've loaded this ui.
-            ui.loaded = true    
-        else
-            ui.loaded = false
-        end             
-    end
+        -- Determines if this is a named unit with a set display as value.
+        ui.display = ui.named  and Options.db.profile[Options.profile].names[ui.name].display or ui.display
+        
+        -- Lets the adodn know we've loaded this ui.
+        ui.loaded = true    
+    else
+        ui.loaded = false
+    end             
+end
     
+function Perspective:UpdateOptions(ui, full)
     if ui then
         -- Update only the specific unit information
         updateOptions(ui)
@@ -2153,56 +2153,56 @@ function Perspective:UpdateActivationState(ui, unit)
     ui.category = category
 end
 
-function Perspective:UpdateRewards(ui, unit)
-    -- Determines if this unit is a valid quest target
-    -- This is used to target specific units for specific quests.
-    local function isValidQuestUnit(unit, questId, act)
-        -- Default all as valid.
-        local isValid = true
+-- Determines if this unit is a valid quest target
+-- This is used to target specific units for specific quests.
+local function isValidQuestUnit(unit, questId, act)
+    -- Default all as valid.
+    local isValid = true
 
-        if unit:GetMouseOverType() == "Simple" then
-            if unit:GetType() == "NonPlayer" then
-                -- Landing Site (Northern Wastes)
-                if questId == 7085 and not act.Interact then
-                    isValid = false
-                end
-            elseif unit:GetType() == "Simple" or unit:GetType() == "SimpleCollidable" then
-                -- ANALYSIS: Crystal Healing (Northern Wastes)
-                if questId == 7086 and not act.ScientistRawScannable then
-                    isValid = false
-                -- The Ravenous Grove
-                elseif questId == 6762 and not act.Interact then
-                    isValid = false
-                -- Ever Vigilant
-                elseif questId == 7007 and not act.Interact then
-                    isValid = false
-                -- Knowledge is Everywhere
-                elseif questId == 7009 and not act.Interact then
-                    isValid = false
-                end
-            end
-        elseif unit:GetType() == "NonPlayer" then
-            if unit:IsDead() then
-                isValid = false
-            end
-        end
-
-        return isValid
-    end
-
-    local function isValidChallengeUnit(unit, challengeId)
-        -- Default all as valid.
-        local isValid = true
-
+    if unit:GetMouseOverType() == "Simple" then
         if unit:GetType() == "NonPlayer" then
-            if unit:IsDead() then
+            -- Landing Site (Northern Wastes)
+            if questId == 7085 and not act.Interact then
+                isValid = false
+            end
+        elseif unit:GetType() == "Simple" or unit:GetType() == "SimpleCollidable" then
+            -- ANALYSIS: Crystal Healing (Northern Wastes)
+            if questId == 7086 and not act.ScientistRawScannable then
+                isValid = false
+            -- The Ravenous Grove
+            elseif questId == 6762 and not act.Interact then
+                isValid = false
+            -- Ever Vigilant
+            elseif questId == 7007 and not act.Interact then
+                isValid = false
+            -- Knowledge is Everywhere
+            elseif questId == 7009 and not act.Interact then
                 isValid = false
             end
         end
-
-        return isValid
+    elseif unit:GetType() == "NonPlayer" then
+        if unit:IsDead() then
+            isValid = false
+        end
     end
 
+    return isValid
+end
+
+local function isValidChallengeUnit(unit, challengeId)
+    -- Default all as valid.
+    local isValid = true
+
+    if unit:GetType() == "NonPlayer" then
+        if unit:IsDead() then
+            isValid = false
+        end
+    end
+
+    return isValid
+end
+
+function Perspective:UpdateRewards(ui, unit)
     local uType = unit:GetType()
 
     -- Make sure the unit will actually have a reward.

@@ -783,6 +783,13 @@ function PerspectiveOptions:LoadDefaults()
                         iconWidth = 42,
                         iconHeight = 36,
                         lineColor = "ff00ff00" },
+                    questNewMain = {
+                        title = L.Category_Quest_Start_Main,
+                        module = L.Module_Quest,
+                        icon = "PerspectiveOptions:Quest-Available",
+                        iconWidth = 42,
+                        iconHeight = 36,
+                        lineColor = "ff00ff00" },
                     questTalkTo = {
                         title = L.Category_Quest_TalkTo,
                         module = L.Module_Quest,
