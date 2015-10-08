@@ -216,6 +216,12 @@
     <Sprite Name="quest-available" Cycle="1">
         <Frame Texture="Perspective\Sprites\quest\available.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
+    <Sprite Name="quest-available-main" Cycle="1">
+        <Frame Texture="Perspective\Sprites\quest\availableMain.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="quest-available-repeatable" Cycle="1">
+        <Frame Texture="Perspective\Sprites\quest\availableRepeatable.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
     <Sprite Name="quest-talkto" Cycle="1">
         <Frame Texture="Perspective\Sprites\quest\talkto.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
