@@ -428,6 +428,7 @@ function PerspectiveOptions:LoadDefaults()
                         iconHeight = 36,
                         iconWidth = 36,
                         showLines = false },
+                        fontColor = "ffffc800",
                         iconColor = "ff8dffa4",
                     friend = {
                         title = L.Category_Player_Friend,
@@ -1342,7 +1343,17 @@ function PerspectiveOptions:ShowTargetInfo()
         local zone = GameLib.GetCurrentZoneMap()
         local buffs = target:GetBuffs()
 
+        local arAccountFriends = {}
+        for k, tFriend in pairs(FriendshipLib:GetAccountList() or {}) do
+            if(tFriend.arCharacters) then
+                for k2, tChar in pairs(tFriend.arCharacters) do
+                    arAccountFriends[tChar.strCharacterName] = tFriend.strCharacterName
+                end
+            end
+        end        
+
         appendLine("Name: " .. target:GetName())
+        appendLine("AccountName: " .. tostring(arAccountFriends[target:GetName()]))
         appendLine("Title: " .. target:GetTitle())
         appendLine("ID: " .. target:GetId())
         appendLine("IsDead: " .. tostring(target:IsDead()))

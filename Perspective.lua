@@ -132,6 +132,9 @@ function Perspective:OnInitialize()
     
     self.inRaid = false
 
+    self.arAccountFriends = {}
+    self:PrepareAccountFriends()
+
     -- Register our addon events    
     Apollo.RegisterEventHandler("ResolutionChanged",                    "OnResolutionChanged", self)
     Apollo.RegisterEventHandler("UnitCreated",                          "OnUnitCreated", self)
@@ -606,7 +609,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
             local text = ""
 
             if ui.showName then
-                text = ui.display or ui.name or ""
+                text = ui.nameOverride or ui.display or ui.name or ""
             end
 
             text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. "\n(" .. math.ceil(ui.distance) .. "m)" or text
@@ -1753,7 +1756,19 @@ function Perspective:OnChatZoneChange()
     self:OnWorldChanged()
 end
 
+function Perspective:PrepareAccountFriends() 
+    self.arAccountFriends = {}
+    for k, tFriend in pairs(FriendshipLib:GetAccountList() or {}) do
+        if(tFriend.arCharacters) then
+            for k2, tChar in pairs(tFriend.arCharacters) do
+                self.arAccountFriends[tChar.strCharacterName] = tFriend.strCharacterName
+            end
+        end
+    end
+end
+
 function Perspective:OnFriendshipChanged(unit)
+    self:PrepareAccountFriends()
     self:RecategorizePlayerUnits()
 end
 
@@ -1976,6 +1991,14 @@ function Perspective:UpdatePlayer(ui, unit)
         elseif unit:IsAccountFriend() and
             not Options.db.profile[Options.profile].categories.accountFriend.disabled then
             ui.category = "accountFriend"
+            
+            if ui.showName then
+                local strAccountName = self.arAccountFriends[ui.name]
+                if strAccountName then
+                    ui.nameOverride = ui.name .. "\n(" .. strAccountName .. ")"
+                end
+            end
+
         -- Check to see if the unit is in our guild
         elseif  player and player:GetGuildName() and 
             unit:GetGuildName() == player:GetGuildName() and
