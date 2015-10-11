@@ -438,9 +438,9 @@ function PerspectiveOptions:LoadDefaults()
                         icon = "IconSprites:Icon_Windows_UI_CRB_Friend",
                         iconHeight = 36,
                         iconWidth = 36,
-                        showLines = false },
+                        showLines = false, 
                         fontColor = "ffffc800",
-                        lineColor = "ffffc800",
+                        lineColor = "ffffc800" },
                     friend = {
                         title = L.Category_Player_Friend,
                         module = L.Module_Player,
@@ -603,11 +603,9 @@ function PerspectiveOptions:LoadDefaults()
                     [L.Unit_Walatiki_Mask] = {
                         title = L.Category_Walatiki_Mask,
                         module = L.Module_Walatiki,
-                        icon = "PerspectiveSprites:Walatiki-Mask",
-                        
+                        icon = "PerspectiveSprites:Walatiki-Mask",                        
                         iconColor = "ffffff00",
-                        lineColor = "ffffff00",
-                         },
+                        lineColor = "ffffff00" },
                     [L.Unit_Walatiki_Totem_Exile] = {
                         title = L.Category_Walatiki_Totem_Exile,
                         module = L.Module_Walatiki,
