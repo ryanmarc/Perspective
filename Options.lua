@@ -1164,6 +1164,15 @@ function PerspectiveOptions:LoadDefaults()
                         iconHeight = 48,
                         iconWidth = 48,
                         showLines = false },
+                    gauntletGoldenSkull = {
+                        title = L.Category_Gauntlet_GoldenSkull,
+                        module = L.Module_Gauntlet,
+                        icon = "PerspectiveSprites:Quest-Objective",
+                        showLines = true,
+                        showName = false,
+                        showDistance = false,
+                        iconColor = "ffffff00",
+                        lineColor = "ffffff00" },
                     cowPolice = {
                         title = L.Category_Crimelords_Police,
                         module = L.Module_Crimelords,

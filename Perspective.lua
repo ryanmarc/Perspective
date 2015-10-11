@@ -903,6 +903,8 @@ function Perspective:UpdateUnitCategory(ui, unit)
                         self:UpdateNonPlayer(ui, unit)
                     elseif type == "Harvest" then
                         self:UpdateHarvest(ui, unit)
+                    elseif type == "Simple" then
+                        self:UpdateSimple(ui, unit)
                     elseif type == "Pickup" then
                         self:UpdatePickup(ui, unit)
                     elseif type == "Collectible" then
@@ -2052,6 +2054,14 @@ function Perspective:UpdateHarvest(ui, unit)
         end
     end
 
+end
+
+function Perspective:UpdateSimple(ui, unit)
+    -- use Localization
+    if unit:GetName() == "Golden Skull" and
+        not Options.db.profile[Options.profile].categories.gauntletGoldenSkull.disabled then
+        ui.category = "gauntletGoldenSkull"
+    end
 end
 
 function Perspective:UpdatePickup(ui, unit)

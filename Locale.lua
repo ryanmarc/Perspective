@@ -108,6 +108,8 @@ function PerspectiveLocale:LoadLocalization()
 
     locale.Category_Crimelords_Police               = "Police"
 
+    locale.Category_Gauntlet_GoldenSkull            = "Golden Skull"
+
     locale.Category_Malgrave_Water                  = "Water"
     locale.Category_Malgrave_Caravan_Member         = "Caravan Member"
     locale.Category_Malgrave_Food                   = "Food"
@@ -129,9 +131,10 @@ function PerspectiveLocale:LoadLocalization()
     locale.Module_Travel                            = "Travel"
     locale.Module_Town                              = "Town"
     locale.Module_Path                              = "Path"
-    locale.Module_WotW                              = "War of the Wilds"
-    locale.Module_Crimelords                        = "Crimelords of Whitevale"
-    locale.Module_Malgrave                          = "The Malgrave Trail"
+    locale.Module_WotW                              = "Adventure - WotW"
+    locale.Module_Crimelords                        = "Adventure - Crimelords"
+    locale.Module_Gauntlet                          = "Expedition - Gauntlet"
+    locale.Module_Malgrave                          = "Adventure - Malgrave Trail"
     locale.Module_Custom                            = "Custom"
 
     locale.Unit_Custom                              = "Custom"
@@ -346,7 +349,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_PVP_Hostile_Spellslinger        = "Hostile Spellslinger"
     locale.Category_PVP_Hostile_Esper               = "Hostile Esper"
     
-    locale.Module_Walatiki                          = "Walatiki Temple"
+    locale.Module_Walatiki                          = "PVP - Walatiki Temple"
 
     locale.Category_Walatiki_Mask                   = "Neutral Mask"
     locale.Category_Walatiki_Mask_Dominion          = "Dominion Mask"
@@ -393,6 +396,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Maimbot_R4                      = "Verstümmlerbot R4"
         locale.Unit_Police_Patrolman                = "Polizeistreife"              
         locale.Unit_Police_Constable                = "Wachtmeisterin"              
+        locale.Unit_Golden_Skull                    = "Golden Skull"              
         locale.Unit_Water                           = "Wasser"                                                  
         locale.Unit_Water_Barrel                    = "Karawanenmitglied"                   
         --locale.Unit_Invisible_Water_Dowsing_Unit  = "Invisible Water Dowsing Unit"    
