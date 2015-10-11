@@ -25,6 +25,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_Misc_Focus                      = "Focus"
     locale.Category_Misc_Lore                       = "Lore"
     locale.Category_Misc_Weapon_Subdue              = "Weapon Subdue"
+    locale.Category_Misc_Interactable               = "Interactable"
 
     locale.Category_Player_Group                    = "Group"
     locale.Category_Player_Raid                     = "Raid"

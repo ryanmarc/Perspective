@@ -295,6 +295,17 @@ function PerspectiveOptions:LoadDefaults()
                         maxDistance = 9999,
                         minDistance = 100,
                         iconColor = "ff89ff00" },
+                    interactable = {
+                        title = L.Category_Misc_Interactable,
+                        module = L.Module_Misc,
+                        icon = "PerspectiveSprites:quest-interactive",
+                        showLines = false,
+                        max = 3,
+                        iconHeight = 36,
+                        iconWidth = 36,
+                        limitBy = "category",
+                        lineColor = "ffffb000",
+                        iconColor = "ffffb000" },
                     target = {
                         title = L.Category_Misc_Target,
                         module = L.Module_Misc,
