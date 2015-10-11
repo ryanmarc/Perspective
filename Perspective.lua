@@ -21,7 +21,6 @@ local L = {}
 
 local activationStates = {
     { state = "Public Event",           category = "eventInteractable" },
-    { state = "Interact",               category = "interactable" },
     { state = "QuestReward",            category = "questReward" },
     { state = "QuestNewMain",           category = "questNewMain" },
     { state = "QuestNew",               category = "questNew" },
@@ -56,6 +55,7 @@ local activationStates = {
     { state = "Bank",                   category = "bank" },
     { state = "GuildBank",              category = "guildBank" },
     { state = "Dungeon",                category = "dungeon" },
+    { state = "Interact",               category = "interactable" },
 }
 
 -- Used to fix units that do not show up as challenges
