@@ -1115,9 +1115,11 @@ function PerspectiveOptions:LoadDefaults()
                         fontColor = "ffc759ff",
                         icon = "PerspectiveSprites:Path-Settler",
                         lineColor = "ffc759ff",
+                        iconColor = "88ffffff",
                         iconHeight = 36,
                         iconWidth = 36,
-                        maxLines = 1 },
+                        maxLines = 1,
+                        showLines = false },
                     settlerResources = {
                         title = L.Category_Path_Settler_Resources,
                         module = L.Module_Path,

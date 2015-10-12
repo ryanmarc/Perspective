@@ -35,6 +35,7 @@ local activationStates = {
     { state = "ExplorerActivate",       category = "explorer" },
     { state = "ExplorerDoor",           category = "explorer" },
     { state = "SettlerActivate",        category = "settler" },
+    { state = "SettlerMinfrastructure", category = "settler" },
     { state = "SoldierActivate",        category = "soldier" },
     { state = "SoldierKill",            category = "soldier" },
     { state = "ScientistScannable",     category = "scientist" },
@@ -55,6 +56,7 @@ local activationStates = {
     { state = "Bank",                   category = "bank" },
     { state = "GuildBank",              category = "guildBank" },
     { state = "Dungeon",                category = "dungeon" },
+    { state = "Collect",                category = "interactable" },
     { state = "Interact",               category = "interactable" },
 }
 
@@ -2145,13 +2147,15 @@ function Perspective:UpdateActivationState(ui, unit)
             state[v.state].bCanInteract and
             not Options.db.profile[Options.profile].categories[v.category].disabled then
 
-            category = v.category
-
             if v.state == "Datacube" and 
                 PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Scientist and 
                 string.find(unit:GetName(), L.Unit_Datacube) then
                 category = "scientistScans"
-            end 
+            end
+
+            if not (v.state == "Collect"  and state[v.state].bUsePlayerPath) then
+                category = v.category
+            end
 
             break
         end
