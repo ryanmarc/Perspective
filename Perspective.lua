@@ -2034,6 +2034,13 @@ function Perspective:UpdateNonPlayer(ui, unit)
             ui.category = "wotwChampion"
         end
     end 
+
+    -- Holiday Expedition: Quiet Downs
+    --  might wanna limit to Zone ID 252 "Stygian Thicket"
+    --  (GameLib.GetCurrentZoneMap().id)
+    if (unit:GetName() == "Shadeling") then
+        ui.category = "hostile"
+    end
 end
 
 function Perspective:UpdateHarvest(ui, unit)
