@@ -423,8 +423,7 @@ function PerspectiveOptions:LoadDefaults()
                         max = 100,
                         iconWidth = 24,
                         iconHeight = 24,
-                        showLines = false,
-                        disabled = true },
+                        showLines = false },
                     exile = {
                         title = L.Category_Player_Exile,
                         module = L.Module_Player,
