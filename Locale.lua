@@ -30,6 +30,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_Player_Group                    = "Group"
     locale.Category_Player_Raid                     = "Raid"
     locale.Category_Player_Guild                    = "Guild"
+    locale.Category_Player_LFRP                     = "Roleplayer (requires LFRP Addon)"
     locale.Category_Player_Exile                    = "Exile"
     locale.Category_Player_Dominion                 = "Dominion"
     locale.Category_Player_AccountFriend            = "Friend (Account)"

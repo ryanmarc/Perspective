@@ -15,6 +15,8 @@ local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
 local Perspective = GeminiAddon:NewAddon("Perspective", false, {})
 
+local lfrp = nil
+
 local Options
 
 local L = {}
@@ -181,6 +183,8 @@ function Perspective:OnInitialize()
     Apollo.RegisterEventHandler("FriendshipAdd",                        "OnFriendshipChanged", self)
     Apollo.RegisterEventHandler("FriendshipPostRemove",                 "OnFriendshipChanged", self)
     Apollo.RegisterEventHandler("FriendshipUpdate",                     "OnFriendshipChanged", self)
+
+    lfrp = Apollo.GetAddon("LFRP")
 
     -- Challenge specific fixes
     challengeUnits = {
@@ -1984,6 +1988,20 @@ function Perspective:UpdatePlayer(ui, unit)
     end
 
     if not ui.category then
+
+        local lfrpEntry = nil
+        local bLFRP = false
+        local strLFRPchan = ""
+        if lfrp ~= nil then
+            if lfrp.tTracked[unit:GetName()] then
+                lfrpEntry = lfrp.tTracked[unit:GetName()]
+                if lfrpEntry["bLFRP"] == true and lfrpEntry["bOptOut"] == nil then
+                    bLFRP = true
+                    strLFRPchan = lfrpEntry["strChannel"]
+                end
+            end
+        end
+
         -- Check to see if the unit is in our group
         if unit:IsInYourGroup() then
             local raidType = self:GetRaidType(unit)
@@ -2015,6 +2033,12 @@ function Perspective:UpdatePlayer(ui, unit)
         elseif unit:IsRival() and
             not Options.db.profile[Options.profile].categories.rival.disabled then
             ui.category = "rival"
+        elseif bLFRP and
+            not Options.db.profile[Options.profile].categories.lfrp.disabled then
+            ui.category = "lfrp"
+            if strLFRPchan ~= nil and strLFRPchan ~= "" then
+                ui.nameOverride = ui.name .. "\n(" .. strLFRPchan .. ")"
+            end
         elseif unit:GetFaction() == 167 and
             not Options.db.profile[Options.profile].categories.exile.disabled then
             ui.category = "exile"
