@@ -2011,7 +2011,9 @@ function Perspective:UpdatePlayer(ui, unit)
             elseif not Options.db.profile[Options.profile].categories.group.disabled then
                 ui.category = "group"
             end
-        elseif unit:IsAccountFriend() and
+        end
+
+        if not ui.category and unit:IsAccountFriend() and
             not Options.db.profile[Options.profile].categories.accountFriend.disabled then
             ui.category = "accountFriend"
             
