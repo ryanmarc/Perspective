@@ -2131,7 +2131,7 @@ end
 function Perspective:UpdateDiscovery(ui, unit)
     local name = unit:GetName()
 
-    if name == "Discovery" and
+    if name == L.Unit_Discovery and
         not Options.db.profile[Options.profile].categories.discovery.disabled then
             ui.category = "discovery"
     end

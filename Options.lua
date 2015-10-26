@@ -358,7 +358,7 @@ function PerspectiveOptions:LoadDefaults()
                         lineColor = "ffffff00",
                         iconColor = "ffffff00" },
                     discovery = {
-                        title = "Discovery",
+                        title = L.Category_Misc_Discoveries,
                         module = L.Module_Misc,
                         icon = "PerspectiveSprites:quest-loot",
                         maxLines = 4,

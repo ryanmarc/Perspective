@@ -26,6 +26,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_Misc_Lore                       = "Lore"
     locale.Category_Misc_Weapon_Subdue              = "Weapon Subdue"
     locale.Category_Misc_Interactable               = "Interactable"
+    locale.Category_Misc_Discoveries                = "Discoveries"
 
     locale.Category_Player_Group                    = "Group"
     locale.Category_Player_Raid                     = "Raid"
@@ -190,6 +191,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Unit_Datacube                            = "DATACUBE"
     locale.Unit_Shipwrecked_Victim                  = "Shipwrecked Victim"
     locale.Unit_AffiliationName_EliteChampion       = "Elite Champion"
+    locale.Unit_Discovery                           = "Discovery"
 
     -- Buffs, dont change
     locale.Debuff_Moodie_Mask_Neutral               = "Neutral - Moodie Mask Carrier"
@@ -420,6 +422,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Walatiki_Mask_Exile             = "Moodiemaske der Verbannten"
         locale.Unit_Datacube                        = "DATENWÜRFEL:"
         locale.Unit_Shipwrecked_Victim              = "Schiffbrüchiger"
+        locale.Unit_Discovery                       = "Entdeckung"
 
         -- Trade skill names (do not translate as these come from the game client)
         locale.Tradeskill_Farmer                    = "Bauer"
@@ -437,6 +440,8 @@ function PerspectiveLocale:LoadLocalization()
         locale.Debuff_Moodie_Mask_Neutral           = "Neutral – Moodiemaskenträger"
         locale.Debuff_Moodie_Mask_Dominion          = "Dominion-Moodiemasken-Träger"
         locale.Debuff_Moodie_Mask_Exile             = "Exile-Moodiemasken-Träger"
+
+        locale.Category_Misc_Discoveries            = "Entdeckungen"
 
 
     elseif cancel == "Annuler" then     
@@ -465,6 +470,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Category_Misc_Focus                      = "Focus"
         locale.Category_Misc_Lore                       = "Lore"
         locale.Category_Misc_Weapon_Subdue              = "Arme échappée"
+        locale.Category_Misc_Discoveries                = "Découvertes"
 
         locale.Category_Player_Group                    = "Groupe"
         locale.Category_Player_Raid                     = "Raid"
@@ -723,6 +729,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Walatiki_Mask_Exile             = "Masque moodie Exilé"
         locale.Unit_Datacube                        = "INFOCUBE"
         locale.Unit_Shipwrecked_Victim              = "Victime naufragée"
+        locale.Unit_Discovery                       = "Découverte"
 
         -- Trade skill names (do not translate as these come from the game client)
         locale.Tradeskill_Farmer                    = "Agriculture"
