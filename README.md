@@ -1,15 +1,23 @@
 Perspective
 ===========
 
-The original author of this add-on has seemingly abandoned the project, the original outdated add-on can be found [here](http://www.curse.com/ws-addons/wildstar/222046-perspective).
+WildStar addon to track and display units on the user's screen.
 
-# Note:
-This add-on will now be maintained and updated here, we plan on adding features and tweaks over time, based on what the community is asking for. But the ultimate goal is to simply keep this great add-on working for players to enjoy.
+Perspective was inspired by the Ayth Quest and EntSpy addons.  I loved what the addons did but always felt they lacked the degree of customization that I demand.
 
-# About:
+This is a work in progress, some settings such as the markers and blacklist have not been added to the configuration screen yet.
 
-Perspective is an addon that tracks and displays units on the user's screen.
+##Screenshots
 
-Perspective was inspired by the [Ayth_Quest](http://www.curse.com/ws-addons/wildstar/220588-ayth_quest) and [EntSpy](http://www.curse.com/ws-addons/wildstar/221350-entspy) addons. I loved what the addons did but always felt they lacked the degree of customization that I demand.  I tried to keep the performance as fast as possible, but there are sliders under the settings to adjust for better performance as needed.
+###Game View
+![Game View](https://raw.githubusercontent.com/jsaucier/Perspective/gh-pages/images/screenshot.jpg)
 
-If you find that a unit is not working quite right, target the unit and use the /pti command.  Paste that information along with your comments for better results.
+###Healing Setup
+With party range limit set to 15, you can easily see at a glance which party members are in range and which are not.
+![Healing Setup](https://raw.githubusercontent.com/jsaucier/Perspective/gh-pages/images/healing.jpg)
+
+###Settings
+![Settings](https://raw.githubusercontent.com/jsaucier/Perspective/gh-pages/images/settings.jpg)
+
+###Configuration
+![Configuration](https://raw.githubusercontent.com/jsaucier/Perspective/gh-pages/images/config.jpg)
