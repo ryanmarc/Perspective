@@ -25,13 +25,17 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_Misc_Focus                      = "Focus"
     locale.Category_Misc_Lore                       = "Lore"
     locale.Category_Misc_Weapon_Subdue              = "Weapon Subdue"
+    locale.Category_Misc_Interactable               = "Interactable"
+    locale.Category_Misc_Discoveries                = "Discoveries"
 
     locale.Category_Player_Group                    = "Group"
     locale.Category_Player_Raid                     = "Raid"
     locale.Category_Player_Guild                    = "Guild"
+    locale.Category_Player_LFRP                     = "Roleplayer (requires LFRP Addon)"
     locale.Category_Player_Exile                    = "Exile"
     locale.Category_Player_Dominion                 = "Dominion"
-    locale.Category_Player_Friend                   = "Friend"
+    locale.Category_Player_AccountFriend            = "Friend (Account)"
+    locale.Category_Player_Friend                   = "Friend (Character)"
     locale.Category_Player_Rival                    = "Rival"
     locale.Category_Player_Main_Tank                = "Main Tank"
     locale.Category_Player_Main_Assist              = "Main Assist"
@@ -41,17 +45,21 @@ function PerspectiveLocale:LoadLocalization()
 
     locale.Category_NPC_Friendly_Normal             = "Friendly Normal"
     locale.Category_NPC_Friendly_Prime              = "Friendly Prime"
-    locale.Category_NPC_Friendly_Elite              = "Friendly Elite"
+    locale.Category_NPC_Friendly_Group              = "Friendly Group Mob"
     locale.Category_NPC_Neutral_Normal              = "Neutral Normal"
     locale.Category_NPC_Neutral_Prime               = "Neutral Prime"
-    locale.Category_NPC_Neutral_Elite               = "Neutral Elite"
+    locale.Category_NPC_Neutral_Group               = "Neutral Group Mob"
     locale.Category_NPC_Hostile_Normal              = "Hostile Normal"
     locale.Category_NPC_Hostile_Prime               = "Hostile Prime"
-    locale.Category_NPC_Hostile_Elite               = "Hostile Elite"
+    locale.Category_NPC_Hostile_Group               = "Hostile Group Mob"
+    locale.Category_NPC_Hostile_Elite               = "Hostile Elite Champion (Rare)"
 
     locale.Category_Quest_Objective                 = "Objective"
     locale.Category_Quest_Interactable              = "Interactable"
-    locale.Category_Quest_Start                     = "Start"
+    locale.Category_Quest_Start                     = "Start (Task)"
+    locale.Category_Quest_Start_Main                = "Start (Main)"
+    locale.Category_Quest_Start_Repeatable          = "Start (Repeatable)"
+    locale.Category_Quest_Start_Tradeskill          = "Start (Tradeskill)"
     locale.Category_Quest_TalkTo                    = "Talk To"
     locale.Category_Quest_Complete                  = "Complete"
     locale.Category_Quest_Location                  = "Quest Location"
@@ -102,6 +110,8 @@ function PerspectiveLocale:LoadLocalization()
 
     locale.Category_Crimelords_Police               = "Police"
 
+    locale.Category_Gauntlet_GoldenSkull            = "Golden Skull"
+
     locale.Category_Malgrave_Water                  = "Water"
     locale.Category_Malgrave_Caravan_Member         = "Caravan Member"
     locale.Category_Malgrave_Food                   = "Food"
@@ -123,9 +133,10 @@ function PerspectiveLocale:LoadLocalization()
     locale.Module_Travel                            = "Travel"
     locale.Module_Town                              = "Town"
     locale.Module_Path                              = "Path"
-    locale.Module_WotW                              = "War of the Wilds"
-    locale.Module_Crimelords                        = "Crimelords of Whitevale"
-    locale.Module_Malgrave                          = "The Malgrave Trail"
+    locale.Module_WotW                              = "Adventure - WotW"
+    locale.Module_Crimelords                        = "Adventure - Crimelords"
+    locale.Module_Gauntlet                          = "Expedition - Gauntlet"
+    locale.Module_Malgrave                          = "Adventure - Malgrave Trail"
     locale.Module_Custom                            = "Custom"
 
     locale.Unit_Custom                              = "Custom"
@@ -179,6 +190,8 @@ function PerspectiveLocale:LoadLocalization()
     locale.Unit_Walatiki_Mask_Exile                 = "Exile Moodie Mask"
     locale.Unit_Datacube                            = "DATACUBE"
     locale.Unit_Shipwrecked_Victim                  = "Shipwrecked Victim"
+    locale.Unit_AffiliationName_EliteChampion       = "Elite Champion"
+    locale.Unit_Discovery                           = "Discovery"
 
     -- Buffs, dont change
     locale.Debuff_Moodie_Mask_Neutral               = "Neutral - Moodie Mask Carrier"
@@ -339,7 +352,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_PVP_Hostile_Spellslinger        = "Hostile Spellslinger"
     locale.Category_PVP_Hostile_Esper               = "Hostile Esper"
     
-    locale.Module_Walatiki                          = "Walatiki Temple"
+    locale.Module_Walatiki                          = "PVP - Walatiki Temple"
 
     locale.Category_Walatiki_Mask                   = "Neutral Mask"
     locale.Category_Walatiki_Mask_Dominion          = "Dominion Mask"
@@ -386,6 +399,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Maimbot_R4                      = "Verstümmlerbot R4"
         locale.Unit_Police_Patrolman                = "Polizeistreife"              
         locale.Unit_Police_Constable                = "Wachtmeisterin"              
+        locale.Unit_Golden_Skull                    = "Golden Skull"              
         locale.Unit_Water                           = "Wasser"                                                  
         locale.Unit_Water_Barrel                    = "Karawanenmitglied"                   
         --locale.Unit_Invisible_Water_Dowsing_Unit  = "Invisible Water Dowsing Unit"    
@@ -408,6 +422,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Walatiki_Mask_Exile             = "Moodiemaske der Verbannten"
         locale.Unit_Datacube                        = "DATENWÜRFEL:"
         locale.Unit_Shipwrecked_Victim              = "Schiffbrüchiger"
+        locale.Unit_Discovery                       = "Entdeckung"
 
         -- Trade skill names (do not translate as these come from the game client)
         locale.Tradeskill_Farmer                    = "Bauer"
@@ -425,6 +440,8 @@ function PerspectiveLocale:LoadLocalization()
         locale.Debuff_Moodie_Mask_Neutral           = "Neutral – Moodiemaskenträger"
         locale.Debuff_Moodie_Mask_Dominion          = "Dominion-Moodiemasken-Träger"
         locale.Debuff_Moodie_Mask_Exile             = "Exile-Moodiemasken-Träger"
+
+        locale.Category_Misc_Discoveries            = "Entdeckungen"
 
 
     elseif cancel == "Annuler" then     
@@ -453,13 +470,15 @@ function PerspectiveLocale:LoadLocalization()
         locale.Category_Misc_Focus                      = "Focus"
         locale.Category_Misc_Lore                       = "Lore"
         locale.Category_Misc_Weapon_Subdue              = "Arme échappée"
+        locale.Category_Misc_Discoveries                = "Découvertes"
 
         locale.Category_Player_Group                    = "Groupe"
         locale.Category_Player_Raid                     = "Raid"
         locale.Category_Player_Guild                    = "Guilde"
         locale.Category_Player_Exile                    = "Exilés"
         locale.Category_Player_Dominion                 = "Dominion"
-        locale.Category_Player_Friend                   = "Alliés"
+        locale.Category_Player_AccountFriend            = "Alliés (Account)"
+        locale.Category_Player_Friend                   = "Alliés (Character)"
         locale.Category_Player_Rival                    = "Rivaux"
         locale.Category_Player_Main_Tank                = "Tank principal"
         locale.Category_Player_Main_Assist              = "Assistant principal"
@@ -469,13 +488,14 @@ function PerspectiveLocale:LoadLocalization()
 
         locale.Category_NPC_Friendly_Normal             = "Allié Normal"
         locale.Category_NPC_Friendly_Prime              = "Allié Prime"
-        locale.Category_NPC_Friendly_Elite              = "Allié Élite"
+        locale.Category_NPC_Friendly_Group              = "Allié Group"
         locale.Category_NPC_Neutral_Normal              = "Neutre Normal"
         locale.Category_NPC_Neutral_Prime               = "Neutre Prime"
-        locale.Category_NPC_Neutral_Elite               = "Neutre Élite"
+        locale.Category_NPC_Neutral_Group               = "Neutre Group"
         locale.Category_NPC_Hostile_Normal              = "Hostile Normal"
         locale.Category_NPC_Hostile_Prime               = "Hostile Prime"
-        locale.Category_NPC_Hostile_Elite               = "Hostile Élite"
+        locale.Category_NPC_Hostile_Group               = "Hostile Group"
+        locale.Category_NPC_Hostile_Elite               = "Hostile Élite (Rare)"
 
         locale.Category_Quest_Objective                 = "Objectif"
         locale.Category_Quest_Interactable              = "Interactif"
@@ -709,6 +729,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Walatiki_Mask_Exile             = "Masque moodie Exilé"
         locale.Unit_Datacube                        = "INFOCUBE"
         locale.Unit_Shipwrecked_Victim              = "Victime naufragée"
+        locale.Unit_Discovery                       = "Découverte"
 
         -- Trade skill names (do not translate as these come from the game client)
         locale.Tradeskill_Farmer                    = "Agriculture"

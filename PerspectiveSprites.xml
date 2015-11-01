@@ -216,6 +216,12 @@
     <Sprite Name="quest-available" Cycle="1">
         <Frame Texture="Perspective\Sprites\quest\available.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
+    <Sprite Name="quest-available-main" Cycle="1">
+        <Frame Texture="Perspective\Sprites\quest\availableMain.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="quest-available-repeatable" Cycle="1">
+        <Frame Texture="Perspective\Sprites\quest\availableRepeatable.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
     <Sprite Name="quest-talkto" Cycle="1">
         <Frame Texture="Perspective\Sprites\quest\talkto.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
@@ -257,6 +263,9 @@
     </Sprite>
     <Sprite Name="player-guild" Cycle="1">
         <Frame Texture="Perspective\Sprites\Player\guild.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="player-lfrp" Cycle="1">
+        <Frame Texture="Perspective\Sprites\Player\lfrp.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
     <Sprite Name="player-maintank" Cycle="1">
         <Frame Texture="Perspective\Sprites\Player\maintank.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
@@ -362,6 +371,9 @@
     </Sprite>
     <Sprite Name="walatiki-totem" Cycle="1">
         <Frame Texture="Perspective\Sprites\Walatiki\totem.tga" x0="0" x1="0" x2="0" x3="0" x4="72" x5="72" y0="0" y1="0" y2="0" y3="0" y4="72" y5="72" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+    <Sprite Name="npc-group" Cycle="1">
+        <Frame Texture="Perspective\Sprites\NPC\group.tga" x0="0" x1="0" x2="0" x3="0" x4="48" x5="48" y0="0" y1="0" y2="0" y3="0" y4="48" y5="48" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
     <Sprite Name="npc-prime" Cycle="1">
         <Frame Texture="Perspective\Sprites\NPC\prime.tga" x0="0" x1="0" x2="0" x3="0" x4="48" x5="48" y0="0" y1="0" y2="0" y3="0" y4="48" y5="48" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>

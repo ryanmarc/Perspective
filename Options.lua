@@ -188,8 +188,8 @@ function PerspectiveOptions:LoadDefaults()
                     offsetLines                             = true,
                     dottedLines                             = false,
                     draw                                    = 0,
-                    slow                                    = 1,
-                    fast                                    = 100,
+                    slow                                    = 2000,
+                    fast                                    = 200,
                     queue                                   = 0,
                     opacity                                 = 100,
                     convertedOpacity                        = "FF" },
@@ -295,6 +295,17 @@ function PerspectiveOptions:LoadDefaults()
                         maxDistance = 9999,
                         minDistance = 100,
                         iconColor = "ff89ff00" },
+                    interactable = {
+                        title = L.Category_Misc_Interactable,
+                        module = L.Module_Misc,
+                        icon = "PerspectiveSprites:quest-interactive",
+                        showLines = false,
+                        max = 3,
+                        iconHeight = 36,
+                        iconWidth = 36,
+                        limitBy = "category",
+                        lineColor = "ffffb000",
+                        iconColor = "ffffb000" },
                     target = {
                         title = L.Category_Misc_Target,
                         module = L.Module_Misc,
@@ -346,6 +357,17 @@ function PerspectiveOptions:LoadDefaults()
                         limitBy = "category",
                         lineColor = "ffffff00",
                         iconColor = "ffffff00" },
+                    discovery = {
+                        title = L.Category_Misc_Discoveries,
+                        module = L.Module_Misc,
+                        icon = "PerspectiveSprites:quest-loot",
+                        maxLines = 4,
+                        max = 4,
+                        iconHeight = 48,
+                        iconWidth = 48,
+                        limitBy = "category",
+                        lineColor = "ffff5700",
+                        iconColor = "ffff5700" },
                     group = {
                         title = L.Category_Player_Group,
                         module = L.Module_Player,
@@ -383,12 +405,24 @@ function PerspectiveOptions:LoadDefaults()
                     guild = {
                         title = L.Category_Player_Guild,
                         module = L.Module_Player,
-                        fontColor = "ff00ff00",
-                        lineColor = "ff00ff00",
-                        iconColor = "ff00ff00",
+                        fontColor = "ffa24ebf",
+                        lineColor = "ffa24ebf",
+                        iconColor = "ffa24ebf",
                         iconWidth = 36,
                         iconHeight = 36,
                         icon = "PerspectiveSprites:player-guild",
+                        showLines = false },
+                    lfrp = {
+                        title = L.Category_Player_LFRP,
+                        module = L.Module_Player,
+                        icon = "PerspectiveSprites:player-lfrp",
+                        iconColor = "ffff65aa",
+                        fontColor = "ffff65aa",
+                        lineColor = "ffff65aa",
+                        maxLines = 100,
+                        max = 100,
+                        iconWidth = 24,
+                        iconHeight = 24,
                         showLines = false },
                     exile = {
                         title = L.Category_Player_Exile,
@@ -410,13 +444,24 @@ function PerspectiveOptions:LoadDefaults()
                         iconHeight = 36,
                         showLines = false,
                         disabled = true },
+                    accountFriend = {
+                        title = L.Category_Player_AccountFriend,
+                        module = L.Module_Player,
+                        icon = "IconSprites:Icon_Windows_UI_CRB_Friend",
+                        iconHeight = 36,
+                        iconWidth = 36,
+                        showLines = false, 
+                        fontColor = "ffffc800",
+                        lineColor = "ffffc800" },
                     friend = {
                         title = L.Category_Player_Friend,
                         module = L.Module_Player,
                         icon = "IconSprites:Icon_Windows_UI_CRB_Friend",
                         iconHeight = 36,
                         iconWidth = 36,
-                        showLines = false },
+                        showLines = false,
+                        fontColor = "ff00ff00",
+                        lineColor = "ff00ff00" },
                     rival = {
                         title = L.Category_Player_Rival,
                         module = L.Module_Player,
@@ -570,11 +615,9 @@ function PerspectiveOptions:LoadDefaults()
                     [L.Unit_Walatiki_Mask] = {
                         title = L.Category_Walatiki_Mask,
                         module = L.Module_Walatiki,
-                        icon = "PerspectiveSprites:Walatiki-Mask",
-                        
+                        icon = "PerspectiveSprites:Walatiki-Mask",                        
                         iconColor = "ffffff00",
-                        lineColor = "ffffff00",
-                         },
+                        lineColor = "ffffff00" },
                     [L.Unit_Walatiki_Totem_Exile] = {
                         title = L.Category_Walatiki_Totem_Exile,
                         module = L.Module_Walatiki,
@@ -618,14 +661,14 @@ function PerspectiveOptions:LoadDefaults()
                         max = 10,
                         iconHeight = 36,
                         iconWidth = 36 },   
-                    friendlyElite = {
-                        title = L.Category_NPC_Friendly_Elite,
+                    friendlyGroup = {
+                        title = L.Category_NPC_Friendly_Group,
                         module = L.Module_NPC,
                         disabled = true,
                         fontColor = "ff00ff00",
                         lineColor = "ff00ff00",
                         iconColor = "ff00ff00",
-                        icon = "PerspectiveSprites:NPC-Elite",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -645,7 +688,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 32,
-                        iconWidth = 32 },   
+                        iconWidth = 32 },  
                     neutralPrime = {
                         title = L.Category_NPC_Neutral_Prime,
                         module = L.Module_NPC,
@@ -658,16 +701,16 @@ function PerspectiveOptions:LoadDefaults()
                         showName = false,
                         showDistance = false,
                         max = 10,
-                        iconHeight = 36,
-                        iconWidth = 36 },   
-                    neutralElite = {
-                        title = L.Category_NPC_Neutral_Elite,
+                        iconHeight = 48,
+                        iconWidth = 48 },   
+                    neutralGroup = {
+                        title = L.Category_NPC_Neutral_Group,
                         module = L.Module_NPC,
                         disabled = true,
                         fontColor = "ffffff00",
                         lineColor = "ffffff00",
                         iconColor = "ffffff00",
-                        icon = "PerspectiveSprites:NPC-Elite",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -692,9 +735,9 @@ function PerspectiveOptions:LoadDefaults()
                     hostilePrime = {
                         title = L.Category_NPC_Hostile_Prime,
                         module = L.Module_NPC,
-                        fontColor = "ff96f4c4",
-                        lineColor = "ff96f4c4",
-                        iconColor = "ff96f4c4",
+                        fontColor = "fff4cbbf",
+                        lineColor = "fff4cbbf",
+                        iconColor = "fff4cbbf",
                         icon = "PerspectiveSprites:NPC-Prime",
                         showLines = false,
                         showName = false,
@@ -711,6 +754,22 @@ function PerspectiveOptions:LoadDefaults()
                         lineColor = "fffa7e58",
                         iconColor = "fffa7e58",
                         icon = "PerspectiveSprites:NPC-Elite",
+                        showLines = false,
+                        showName = true,
+                        showDistance = false,
+                        max = 10,
+                        maxLines = 10,
+                        iconHeight = 48,
+                        iconWidth = 48,
+                        rangeIcon = true,
+                        rangeColor = "ffff00ff" },
+                    hostileGroup = {
+                        title = L.Category_NPC_Hostile_Group,
+                        module = L.Module_NPC,
+                        fontColor = "fffa7e58",
+                        lineColor = "fffa7e58",
+                        iconColor = "fffa7e58",
+                        icon = "PerspectiveSprites:NPC-Group",
                         showLines = false,
                         showName = false,
                         showDistance = false,
@@ -753,9 +812,33 @@ function PerspectiveOptions:LoadDefaults()
                         title = L.Category_Quest_Start,
                         module = L.Module_Quest,
                         icon = "PerspectiveOptions:Quest-Available",
+                        showLines = false,
                         iconWidth = 42,
                         iconHeight = 36,
                         lineColor = "ff00ff00" },
+                    questNewMain = {
+                        title = L.Category_Quest_Start_Main,
+                        module = L.Module_Quest,
+                        icon = "PerspectiveOptions:Quest-Available-Main",
+                        iconWidth = 42,
+                        iconHeight = 36,
+                        lineColor = "ff00ff00" },
+                    questNewRepeatable = {
+                        title = L.Category_Quest_Start_Repeatable,
+                        module = L.Module_Quest,
+                        icon = "PerspectiveOptions:Quest-Available-Repeatable",
+                        iconWidth = 42,
+                        iconHeight = 36,
+                        lineColor = "ff00ff00" },
+                    questNewTradeskill = {
+                        title = L.Category_Quest_Start_Tradeskill,
+                        module = L.Module_Quest,
+                        icon = "PerspectiveOptions:Quest-Available-Repeatable",
+                        showLines = false,
+                        iconWidth = 42,
+                        iconHeight = 36,
+                        iconColor = "88ffffff",
+                        lineColor = "8800ff00" },
                     questTalkTo = {
                         title = L.Category_Quest_TalkTo,
                         module = L.Module_Quest,
@@ -1044,9 +1127,11 @@ function PerspectiveOptions:LoadDefaults()
                         fontColor = "ffc759ff",
                         icon = "PerspectiveSprites:Path-Settler",
                         lineColor = "ffc759ff",
+                        iconColor = "88ffffff",
                         iconHeight = 36,
                         iconWidth = 36,
-                        maxLines = 1 },
+                        maxLines = 1,
+                        showLines = false },
                     settlerResources = {
                         title = L.Category_Path_Settler_Resources,
                         module = L.Module_Path,
@@ -1091,6 +1176,15 @@ function PerspectiveOptions:LoadDefaults()
                         iconHeight = 48,
                         iconWidth = 48,
                         showLines = false },
+                    gauntletGoldenSkull = {
+                        title = L.Category_Gauntlet_GoldenSkull,
+                        module = L.Module_Gauntlet,
+                        icon = "PerspectiveSprites:Quest-Objective",
+                        showLines = true,
+                        showName = false,
+                        showDistance = false,
+                        iconColor = "ffffff00",
+                        lineColor = "ffffff00" },
                     cowPolice = {
                         title = L.Category_Crimelords_Police,
                         module = L.Module_Crimelords,
@@ -1283,15 +1377,30 @@ function PerspectiveOptions:ShowTargetInfo()
         local zone = GameLib.GetCurrentZoneMap()
         local buffs = target:GetBuffs()
 
+        local arAccountFriends = {}
+        for k, tFriend in pairs(FriendshipLib:GetAccountList() or {}) do
+            if(tFriend.arCharacters) then
+                for k2, tChar in pairs(tFriend.arCharacters) do
+                    arAccountFriends[tChar.strCharacterName] = tFriend.strCharacterName
+                end
+            end
+        end        
+
         appendLine("Name: " .. target:GetName())
+        appendLine("AccountName: " .. tostring(arAccountFriends[target:GetName()]))
+        appendLine("Title: " .. target:GetTitle())
         appendLine("ID: " .. target:GetId())
         appendLine("IsDead: " .. tostring(target:IsDead()))
         appendLine("IsValid: " .. tostring(target:IsValid()))
         appendLine("Disposition: " .. tostring(target:GetDispositionTo(GameLib.GetPlayerUnit())))
         appendLine("Difficulty: " .. tostring(target:GetDifficulty()))
         appendLine("Eliteness: " .. tostring(target:GetEliteness()))
+        appendLine("GroupValue: " .. tostring(target:GetGroupValue()))
+        appendLine("Rank: " .. tostring(target:GetRank()))
         appendLine("Faction: " .. tostring(target:GetFaction()))
-        appendLine("Title: " .. tostring(target:GetTitle()))
+        appendLine("Affiliation: " .. tostring(target:GetAffiliationName()))
+        appendLine("GuildName: " .. tostring(target:GetGuildName()))
+        appendLine("GuildType: " .. tostring(target:GetGuildType()))
         appendLine("IsPvpFlagged: " .. tostring(target:IsPvpFlagged()))
         appendLine("Zone: " .. zone.strName .. " [" .. zone.id .. "]")
         appendLine("Type: " .. target:GetType())

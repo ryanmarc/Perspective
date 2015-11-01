@@ -15,6 +15,8 @@ local GeminiAddon = Apollo.GetPackage("Gemini:Addon-1.1").tPackage
 
 local Perspective = GeminiAddon:NewAddon("Perspective", false, {})
 
+local lfrp = nil
+
 local Options
 
 local L = {}
@@ -22,10 +24,12 @@ local L = {}
 local activationStates = {
     { state = "Public Event",           category = "eventInteractable" },
     { state = "QuestReward",            category = "questReward" },
-    { state = "QuestNewMain",           category = "questNew" },
+    { state = "QuestNewMain",           category = "questNewMain" },
     { state = "QuestNew",               category = "questNew" },
-    { state = "QuestNewRepeatable",     category = "questNew" },
-    { state = "QuestNewTradeskill",     category = "questNew" },
+    { state = "QuestNewRepeatable",     category = "questNewRepeatable" },
+    { state = "QuestNewDaily",          category = "questNewRepeatable" },
+    { state = "QuestNewWeekly",         category = "questNewRepeatable" },
+    { state = "QuestNewTradeskill",     category = "questNewTradeskill" },
     --{ state = "QuestTarget",          category = "questInteractable" },
     { state = "TalkTo",                 category = "questTalkTo" },
     { state = "Datacube",               category = "lore" },
@@ -33,6 +37,7 @@ local activationStates = {
     { state = "ExplorerActivate",       category = "explorer" },
     { state = "ExplorerDoor",           category = "explorer" },
     { state = "SettlerActivate",        category = "settler" },
+    { state = "SettlerMinfrastructure", category = "settler" },
     { state = "SoldierActivate",        category = "soldier" },
     { state = "SoldierKill",            category = "soldier" },
     { state = "ScientistScannable",     category = "scientist" },
@@ -53,6 +58,8 @@ local activationStates = {
     { state = "Bank",                   category = "bank" },
     { state = "GuildBank",              category = "guildBank" },
     { state = "Dungeon",                category = "dungeon" },
+    { state = "Collect",                category = "interactable" },
+    { state = "Interact",               category = "interactable" },
 }
 
 -- Used to fix units that do not show up as challenges
@@ -117,7 +124,7 @@ function Perspective:OnInitialize()
     self.timers     = {
         draw        = { elapsed = 0, divisor = 1000,    func = "OnTimerDraw" },
         fast        = { elapsed = 0, divisor = 1000,    func = "OnTimerFast" },
-        slow        = { elapsed = 0, divisor = 1,       func = "OnTimerSlow" },
+        slow        = { elapsed = 0, divisor = 1000,    func = "OnTimerSlow" },
         queue       = { elapsed = 0, divisor = 1000,    func = "OnTimerQueue", time = 10 } }
 
     for index, state in pairs(activationStates) do
@@ -129,6 +136,9 @@ function Perspective:OnInitialize()
     self.markersInitialized = false
     
     self.inRaid = false
+
+    self.arAccountFriends = {}
+    self:PrepareAccountFriends()
 
     -- Register our addon events    
     Apollo.RegisterEventHandler("ResolutionChanged",                    "OnResolutionChanged", self)
@@ -173,6 +183,8 @@ function Perspective:OnInitialize()
     Apollo.RegisterEventHandler("FriendshipAdd",                        "OnFriendshipChanged", self)
     Apollo.RegisterEventHandler("FriendshipPostRemove",                 "OnFriendshipChanged", self)
     Apollo.RegisterEventHandler("FriendshipUpdate",                     "OnFriendshipChanged", self)
+
+    lfrp = Apollo.GetAddon("LFRP")
 
     -- Challenge specific fixes
     challengeUnits = {
@@ -604,7 +616,7 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
             local text = ""
 
             if ui.showName then
-                text = ui.display or ui.name or ""
+                text = ui.nameOverride or ui.display or ui.name or ""
             end
 
             text = (ui.showDistance and ui.distance >= ui.rangeLimit) and text .. "\n(" .. math.ceil(ui.distance) .. "m)" or text
@@ -889,12 +901,16 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     -- Attempt to categorize the unit by type.
                     local type = unit:GetType()
 
+                    self:UpdateDiscovery(ui, unit)
+
                     if type == "Player" then
                         self:UpdatePlayer(ui, unit)
                     elseif type == "NonPlayer" then
                         self:UpdateNonPlayer(ui, unit)
                     elseif type == "Harvest" then
                         self:UpdateHarvest(ui, unit)
+                    elseif type == "Simple" then
+                        self:UpdateSimple(ui, unit)
                     elseif type == "Pickup" then
                         self:UpdatePickup(ui, unit)
                     elseif type == "Collectible" then
@@ -918,23 +934,38 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     disposition = "neutral"
                 end
 
+                -- Rank: 
+                --   Rank 0: Fodder (1st Skull)
+                --   Rank 1: Minion (1st Skull)
+                --   Rank 2: Standard (2nd Skull)
+                --   Rank 3: Champion (2nd Skull)
+                --   Rank 4: Superior (3rd Skull)
+                --   Rank 5: Prime (3rd Skull)
+
+                -- Eliteness / GroupValue: 
+                --   Eliteness 0, GroupValue 0: 1 Player
+                --   Eliteness 1, GroupValue 5: 5 Player
+                --   Eliteness 2, GroupValue 20: 20 Player
+
+                -- Rare Mobs:
+                --   AffiliationName: Elite Champion
+
                 -- Not sure how accurate this is
-                -- Rank 1:          Minion
-                -- Rank 2:          Grunt
-                -- Rank 3:          Challenger
-                -- Rank 4:          Superior
-                -- Rank 5:          Prime
                 -- Difficulty 1:    Minion, Grunt, Challenger
                 -- Difficulty 3:    Prime
                 -- Difficulty 4:    5 Man? - XT Destroyer (Galeras)
                 -- Difficulty 5:    10 Man?
                 -- Difficulty 6:    20 Man? - Doomthorn the Ancient (Galeras)
+
                 -- Eliteness 1:     5 Man + (Dungeons?)
                 -- Eliteness 2:     20 Man? - Doomthorn the Ancient (Galeras)
-                if unit:GetDifficulty() == 3 then
+
+                if unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion and disposition == "hostile"then
+                    difficulty = "Elite"
+                elseif unit:GetGroupValue() > 1 then
+                    difficulty = "Group"
+                elseif unit:GetRank() >= 4 then
                     difficulty = "Prime"
-                elseif unit:GetEliteness() >= 1 then
-                    difficulty =  "Elite"
                 end
 
                 local npcType = disposition .. difficulty
@@ -993,24 +1024,24 @@ function Perspective:UpdateUnitInfo(ui, unit)
     end
 end
 
-function Perspective:UpdateOptions(ui, full)
-    local function updateOptions(ui)
-        if ui.category then
-            -- Loads the options for the ui
-            for k, v in pairs(Options.db.profile[Options.profile].categories.default) do
-                ui[k] = Options:GetOptionValue(ui, k)
-            end
+local function updateOptions(ui)
+    if ui.category then
+        -- Loads the options for the ui
+        for k, v in pairs(Options.db.profile[Options.profile].categories.default) do
+            ui[k] = Options:GetOptionValue(ui, k)
+        end
 
-            -- Determines if this is a named unit with a set display as value.
-            ui.display = ui.named  and Options.db.profile[Options.profile].names[ui.name].display or ui.display
-            
-            -- Lets the adodn know we've loaded this ui.
-            ui.loaded = true    
-        else
-            ui.loaded = false
-        end             
-    end
+        -- Determines if this is a named unit with a set display as value.
+        ui.display = ui.named  and Options.db.profile[Options.profile].names[ui.name].display or ui.display
+        
+        -- Lets the adodn know we've loaded this ui.
+        ui.loaded = true    
+    else
+        ui.loaded = false
+    end             
+end
     
+function Perspective:UpdateOptions(ui, full)
     if ui then
         -- Update only the specific unit information
         updateOptions(ui)
@@ -1734,7 +1765,19 @@ function Perspective:OnChatZoneChange()
     self:OnWorldChanged()
 end
 
+function Perspective:PrepareAccountFriends() 
+    self.arAccountFriends = {}
+    for k, tFriend in pairs(FriendshipLib:GetAccountList() or {}) do
+        if(tFriend.arCharacters) then
+            for k2, tChar in pairs(tFriend.arCharacters) do
+                self.arAccountFriends[tChar.strCharacterName] = tFriend.strCharacterName
+            end
+        end
+    end
+end
+
 function Perspective:OnFriendshipChanged(unit)
+    self:PrepareAccountFriends()
     self:RecategorizePlayerUnits()
 end
 
@@ -1945,6 +1988,20 @@ function Perspective:UpdatePlayer(ui, unit)
     end
 
     if not ui.category then
+
+        local lfrpEntry = nil
+        local bLFRP = false
+        local strLFRPchan = ""
+        if lfrp ~= nil then
+            if lfrp.tTracked[unit:GetName()] then
+                lfrpEntry = lfrp.tTracked[unit:GetName()]
+                if lfrpEntry["bLFRP"] == true and lfrpEntry["bOptOut"] == nil then
+                    bLFRP = true
+                    strLFRPchan = lfrpEntry["strChannel"]
+                end
+            end
+        end
+
         -- Check to see if the unit is in our group
         if unit:IsInYourGroup() then
             local raidType = self:GetRaidType(unit)
@@ -1954,17 +2011,36 @@ function Perspective:UpdatePlayer(ui, unit)
             elseif not Options.db.profile[Options.profile].categories.group.disabled then
                 ui.category = "group"
             end
+        end
+
+        if not ui.category and unit:IsAccountFriend() and
+            not Options.db.profile[Options.profile].categories.accountFriend.disabled then
+            ui.category = "accountFriend"
+            
+            if ui.showName then
+                local strAccountName = self.arAccountFriends[ui.name]
+                if strAccountName then
+                    ui.nameOverride = ui.name .. "\n(" .. strAccountName .. ")"
+                end
+            end
+
         -- Check to see if the unit is in our guild
         elseif  player and player:GetGuildName() and 
-                unit:GetGuildName() == player:GetGuildName() and
-                not Options.db.profile[Options.profile].categories.guild.disabled then
+            unit:GetGuildName() == player:GetGuildName() and
+            not Options.db.profile[Options.profile].categories.guild.disabled then
             ui.category = "guild"
-        elseif unit:IsFriend() or unit:IsAccountFriend() and
+        elseif unit:IsFriend() and
             not Options.db.profile[Options.profile].categories.friend.disabled then
             ui.category = "friend"
         elseif unit:IsRival() and
             not Options.db.profile[Options.profile].categories.rival.disabled then
             ui.category = "rival"
+        elseif bLFRP and
+            not Options.db.profile[Options.profile].categories.lfrp.disabled then
+            ui.category = "lfrp"
+            if strLFRPchan ~= nil and strLFRPchan ~= "" then
+                ui.nameOverride = ui.name .. "\n(" .. strLFRPchan .. ")"
+            end
         elseif unit:GetFaction() == 167 and
             not Options.db.profile[Options.profile].categories.exile.disabled then
             ui.category = "exile"
@@ -1984,6 +2060,13 @@ function Perspective:UpdateNonPlayer(ui, unit)
             ui.category = "wotwChampion"
         end
     end 
+
+    -- Holiday Expedition: Quiet Downs
+    --  might wanna limit to Zone ID 252 "Stygian Thicket"
+    --  (GameLib.GetCurrentZoneMap().id)
+    if (unit:GetName() == "Shadeling") then
+        ui.category = "hostile"
+    end
 end
 
 function Perspective:UpdateHarvest(ui, unit)
@@ -2004,6 +2087,15 @@ function Perspective:UpdateHarvest(ui, unit)
         if category and not Options.db.profile[Options.profile].categories[category].disabled then
             ui.category = category
         end
+    end
+
+end
+
+function Perspective:UpdateSimple(ui, unit)
+    -- use Localization
+    if unit:GetName() == "Golden Skull" and
+        not Options.db.profile[Options.profile].categories.gauntletGoldenSkull.disabled then
+        ui.category = "gauntletGoldenSkull"
     end
 end
 
@@ -2033,6 +2125,15 @@ function Perspective:UpdateCollectible(ui, unit)
     if name == "Secret Stash" and
         not Options.db.profile[Options.profile].categories.secretStash.disabled then
             ui.category = "secretStash"
+    end
+end    
+
+function Perspective:UpdateDiscovery(ui, unit)
+    local name = unit:GetName()
+
+    if name == L.Unit_Discovery and
+        not Options.db.profile[Options.profile].categories.discovery.disabled then
+            ui.category = "discovery"
     end
 end    
 
@@ -2079,13 +2180,15 @@ function Perspective:UpdateActivationState(ui, unit)
             state[v.state].bCanInteract and
             not Options.db.profile[Options.profile].categories[v.category].disabled then
 
-            category = v.category
-
             if v.state == "Datacube" and 
                 PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Scientist and 
                 string.find(unit:GetName(), L.Unit_Datacube) then
                 category = "scientistScans"
-            end 
+            end
+
+            if not (v.state == "Collect"  and state[v.state].bUsePlayerPath) then
+                category = v.category
+            end
 
             break
         end
@@ -2126,56 +2229,56 @@ function Perspective:UpdateActivationState(ui, unit)
     ui.category = category
 end
 
-function Perspective:UpdateRewards(ui, unit)
-    -- Determines if this unit is a valid quest target
-    -- This is used to target specific units for specific quests.
-    local function isValidQuestUnit(unit, questId, act)
-        -- Default all as valid.
-        local isValid = true
+-- Determines if this unit is a valid quest target
+-- This is used to target specific units for specific quests.
+local function isValidQuestUnit(unit, questId, act)
+    -- Default all as valid.
+    local isValid = true
 
-        if unit:GetMouseOverType() == "Simple" then
-            if unit:GetType() == "NonPlayer" then
-                -- Landing Site (Northern Wastes)
-                if questId == 7085 and not act.Interact then
-                    isValid = false
-                end
-            elseif unit:GetType() == "Simple" or unit:GetType() == "SimpleCollidable" then
-                -- ANALYSIS: Crystal Healing (Northern Wastes)
-                if questId == 7086 and not act.ScientistRawScannable then
-                    isValid = false
-                -- The Ravenous Grove
-                elseif questId == 6762 and not act.Interact then
-                    isValid = false
-                -- Ever Vigilant
-                elseif questId == 7007 and not act.Interact then
-                    isValid = false
-                -- Knowledge is Everywhere
-                elseif questId == 7009 and not act.Interact then
-                    isValid = false
-                end
-            end
-        elseif unit:GetType() == "NonPlayer" then
-            if unit:IsDead() then
-                isValid = false
-            end
-        end
-
-        return isValid
-    end
-
-    local function isValidChallengeUnit(unit, challengeId)
-        -- Default all as valid.
-        local isValid = true
-
+    if unit:GetMouseOverType() == "Simple" then
         if unit:GetType() == "NonPlayer" then
-            if unit:IsDead() then
+            -- Landing Site (Northern Wastes)
+            if questId == 7085 and not act.Interact then
+                isValid = false
+            end
+        elseif unit:GetType() == "Simple" or unit:GetType() == "SimpleCollidable" then
+            -- ANALYSIS: Crystal Healing (Northern Wastes)
+            if questId == 7086 and not act.ScientistRawScannable then
+                isValid = false
+            -- The Ravenous Grove
+            elseif questId == 6762 and not act.Interact then
+                isValid = false
+            -- Ever Vigilant
+            elseif questId == 7007 and not act.Interact then
+                isValid = false
+            -- Knowledge is Everywhere
+            elseif questId == 7009 and not act.Interact then
                 isValid = false
             end
         end
-
-        return isValid
+    elseif unit:GetType() == "NonPlayer" then
+        if unit:IsDead() then
+            isValid = false
+        end
     end
 
+    return isValid
+end
+
+local function isValidChallengeUnit(unit, challengeId)
+    -- Default all as valid.
+    local isValid = true
+
+    if unit:GetType() == "NonPlayer" then
+        if unit:IsDead() then
+            isValid = false
+        end
+    end
+
+    return isValid
+end
+
+function Perspective:UpdateRewards(ui, unit)
     local uType = unit:GetType()
 
     -- Make sure the unit will actually have a reward.
