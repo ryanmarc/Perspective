@@ -732,7 +732,7 @@ function PerspectiveLocale:LoadLocalization()
         locale.Unit_Discovery                       = "Découverte"
 
         -- Trade skill names (do not translate as these come from the game client)
-        locale.Tradeskill_Farmer                    = "Agriculture"
+        locale.Tradeskill_Farmer                    = "Agriculteur"
         locale.Tradeskill_Mining                    = "Mineur"
         locale.Tradeskill_Relic_Hunter              = "Chasseur de reliques"
         locale.Tradeskill_Survivalist               = "Adepte de la survie"
