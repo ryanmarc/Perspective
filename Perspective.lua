@@ -934,6 +934,12 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     disposition = "neutral"
                 end
 
+                -- Legendary Champion
+                --    Rank 5
+                --    Eliteness 1, GroupValue 5
+                --    AffiliationName: Legendary Champion
+                --    Faction: 978
+
                 -- Rank: 
                 --   Rank 0: Fodder (1st Skull)
                 --   Rank 1: Minion (1st Skull)
@@ -950,17 +956,11 @@ function Perspective:UpdateUnitCategory(ui, unit)
                 -- Rare Mobs:
                 --   AffiliationName: Elite Champion
 
-                -- Not sure how accurate this is
-                -- Difficulty 1:    Minion, Grunt, Challenger
-                -- Difficulty 3:    Prime
-                -- Difficulty 4:    5 Man? - XT Destroyer (Galeras)
-                -- Difficulty 5:    10 Man?
-                -- Difficulty 6:    20 Man? - Doomthorn the Ancient (Galeras)
-
-                -- Eliteness 1:     5 Man + (Dungeons?)
-                -- Eliteness 2:     20 Man? - Doomthorn the Ancient (Galeras)
-
-                if unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion and disposition == "hostile"then
+                if unit:GetAffiliationName() == L.Unit_AffiliationName_LegendChampion then
+                    disposition = "hostile"
+                    difficulty = "Legend"
+                elseif unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion then
+                    disposition = "hostile"
                     difficulty = "Elite"
                 elseif unit:GetGroupValue() > 1 then
                     difficulty = "Group"

@@ -53,6 +53,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Category_NPC_Hostile_Prime               = "Hostile Prime"
     locale.Category_NPC_Hostile_Group               = "Hostile Group Mob"
     locale.Category_NPC_Hostile_Elite               = "Hostile Elite Champion (Rare)"
+    locale.Category_NPC_Hostile_Legend              = "Hostile Legendary Champion (Exotic Executioner)"
 
     locale.Category_Quest_Objective                 = "Objective"
     locale.Category_Quest_Interactable              = "Interactable"
@@ -191,6 +192,7 @@ function PerspectiveLocale:LoadLocalization()
     locale.Unit_Datacube                            = "DATACUBE"
     locale.Unit_Shipwrecked_Victim                  = "Shipwrecked Victim"
     locale.Unit_AffiliationName_EliteChampion       = "Elite Champion"
+    locale.Unit_AffiliationName_LegendChampion      = "Legendary Champion"
     locale.Unit_Discovery                           = "Discovery"
 
     -- Buffs, dont change
@@ -495,7 +497,6 @@ function PerspectiveLocale:LoadLocalization()
         locale.Category_NPC_Hostile_Normal              = "Hostile Normal"
         locale.Category_NPC_Hostile_Prime               = "Hostile Prime"
         locale.Category_NPC_Hostile_Group               = "Hostile Group"
-        locale.Category_NPC_Hostile_Elite               = "Hostile Élite (Rare)"
 
         locale.Category_Quest_Objective                 = "Objectif"
         locale.Category_Quest_Interactable              = "Interactif"
