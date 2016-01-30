@@ -278,7 +278,7 @@ local preserve_keys = {
 }
 
 local realmKey = GameLib.GetRealmName()
-local charKey = GameLib.GetAccountRealmCharacter().strCharacter .. " - " .. realmKey
+local charKey = (GameLib.GetAccountRealmCharacter and GameLib.GetAccountRealmCharacter().strCharacter or GameLib.GetPlayerUnit():GetName()) .. " - " .. realmKey
 local localeKey = GetLocale():lower()
 
 local function populateKeys(self)
