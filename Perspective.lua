@@ -4,6 +4,10 @@ require "Apollo"
 require "Quest"
 require "QuestLib"
 
+local Major, Minor, Patch, Suffix = 1, 5, 0, 0
+
+local PERSPECTIVE_CURRENT_VERSION = string.format("%d.%d.%d", Major, Minor, Patch)
+
 local os, type, pairs = os, type, pairs
 local table = table
 local math = math
@@ -191,6 +195,8 @@ function Perspective:OnInitialize()
         [L.Unit_Roan_Skull]                     = { challenge = 576 },
         [L.Unit_Shipwrecked_Victim]             = { challenge = 603 }
     }
+
+	Event_FireGenericEvent("OneVersion_ReportAddonInfo", "Perspective", Major, Minor, Patch, Suffix, false)
 end
 
 function Perspective:OnResolutionChanged()

@@ -191,8 +191,8 @@ function PerspectiveLocale:LoadLocalization()
     locale.Unit_Walatiki_Mask_Exile                 = "Exile Moodie Mask"
     locale.Unit_Datacube                            = "DATACUBE"
     locale.Unit_Shipwrecked_Victim                  = "Shipwrecked Victim"
-    locale.Unit_AffiliationName_EliteChampion       = "Elite Champion"
-    locale.Unit_AffiliationName_LegendChampion      = "Legendary Champion"
+    locale.Unit_AffiliationName_EliteChampion       = "<Elite Champion>"
+    locale.Unit_AffiliationName_LegendChampion      = "<Legendary Champion>"
     locale.Unit_Discovery                           = "Discovery"
 
     -- Buffs, dont change
