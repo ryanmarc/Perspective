@@ -1,4 +1,4 @@
---[[ TODO: 
+--[[ TODO:
         New Category
 ]]
 
@@ -15,7 +15,7 @@ local Perspective
 local JSON
 
 local L = {}
-    
+
 local fonts = {
     { name = "Courier" },
     { name = "CRB_AlienLarge" },
@@ -93,10 +93,10 @@ function PerspectiveOptions:OnInitialize()
 
     -- Options window
     self.Options = Apollo.LoadForm(self.xmlDoc, "Options", nil, self)
-    
+
     -- Options categories list
     self.CategoryList = self.Options:FindChild("CategoryList"):FindChild("Categories")
-    
+
     -- Options modules list
     self.ModuleList = self.Options:FindChild("CategoryList"):FindChild("Modules")
 
@@ -112,7 +112,7 @@ function PerspectiveOptions:OnInitialize()
 
     Apollo.RegisterEventHandler("WindowManagementReady", "OnWindowManagementReady", self)
 
-    -- Register the slash command   
+    -- Register the slash command
     --Apollo.RegisterSlashCommand("perspective", "ShowOptions", self)
     Apollo.RegisterSlashCommand("pti", "ShowTargetInfo", self)
     Apollo.RegisterSlashCommand("deadzone", "DeadzoneInfo", self)
@@ -136,6 +136,10 @@ function PerspectiveOptions:OnSlashCommand(cmd, params)
         print("/perspective profile Credit - Avatus")
     elseif p == "show" then
         self:ShowOptions()
+    elseif p == "stop" then
+        Perspective:Stop()
+    elseif p == "start" then
+        Perspective:Start()
     elseif string.sub(params, 1, 7) == "profile" then
         local profile = string.sub(params, 9)
         Print(profile)
@@ -182,7 +186,7 @@ function PerspectiveOptions:LoadDefaults()
     return {
         profile                                             = {
             default                                         = {
-                settings                                    = { 
+                settings                                    = {
                     disabled                                = false,
                     max                                     = 10,
                     offsetLines                             = true,
@@ -225,7 +229,7 @@ function PerspectiveOptions:LoadDefaults()
                     [L.Unit_Dustback_Gnasher]               = { category = "mtEnemy" },
                     [L.Unit_Dustback_Gnawer]                = { category = "mtEnemy" } },
                 buffs                                       = {},
-                debuffs                                     = { 
+                debuffs                                     = {
                     [L.Debuff_Moodie_Mask_Neutral]          = { category = "wtCarrier", disposition = true, zone = 69 },
                     [L.Debuff_Moodie_Mask_Dominion]         = { category = "wtCarrier", disposition = true, zone = 69 },
                     [L.Debuff_Moodie_Mask_Exile]            = { category = "wtCarrier", disposition = true, zone = 69 } },
@@ -309,7 +313,7 @@ function PerspectiveOptions:LoadDefaults()
                     target = {
                         title = L.Category_Misc_Target,
                         module = L.Module_Misc,
-                        disabled = true,                
+                        disabled = true,
                         lineColor = "ffff00ff",
                         iconColor = "ffff00ff",
                         icon = "PerspectiveSprites:Quest-Objective",
@@ -450,7 +454,7 @@ function PerspectiveOptions:LoadDefaults()
                         icon = "IconSprites:Icon_Windows_UI_CRB_Friend",
                         iconHeight = 36,
                         iconWidth = 36,
-                        showLines = false, 
+                        showLines = false,
                         fontColor = "ffffc800",
                         lineColor = "ffffc800" },
                     friend = {
@@ -615,7 +619,7 @@ function PerspectiveOptions:LoadDefaults()
                     [L.Unit_Walatiki_Mask] = {
                         title = L.Category_Walatiki_Mask,
                         module = L.Module_Walatiki,
-                        icon = "PerspectiveSprites:Walatiki-Mask",                        
+                        icon = "PerspectiveSprites:Walatiki-Mask",
                         iconColor = "ffffff00",
                         lineColor = "ffffff00" },
                     [L.Unit_Walatiki_Totem_Exile] = {
@@ -646,7 +650,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 32,
-                        iconWidth = 32 },   
+                        iconWidth = 32 },
                     friendlyPrime = {
                         title = L.Category_NPC_Friendly_Prime,
                         module = L.Module_NPC,
@@ -660,7 +664,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 36,
-                        iconWidth = 36 },   
+                        iconWidth = 36 },
                     friendlyGroup = {
                         title = L.Category_NPC_Friendly_Group,
                         module = L.Module_NPC,
@@ -688,7 +692,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 32,
-                        iconWidth = 32 },  
+                        iconWidth = 32 },
                     neutralPrime = {
                         title = L.Category_NPC_Neutral_Prime,
                         module = L.Module_NPC,
@@ -702,7 +706,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 48,
-                        iconWidth = 48 },   
+                        iconWidth = 48 },
                     neutralGroup = {
                         title = L.Category_NPC_Neutral_Group,
                         module = L.Module_NPC,
@@ -716,7 +720,7 @@ function PerspectiveOptions:LoadDefaults()
                         showDistance = false,
                         max = 10,
                         iconHeight = 36,
-                        iconWidth = 36 },   
+                        iconWidth = 36 },
                     hostile = {
                         title = L.Category_NPC_Hostile_Normal,
                         module = L.Module_NPC,
@@ -868,7 +872,7 @@ function PerspectiveOptions:LoadDefaults()
                         icon = "PerspectiveOptions:Quest-TurnIn",
                         iconHeight = 36,
                         iconWidth = 36,
-                        lineColor = "ff00ff00" },   
+                        lineColor = "ff00ff00" },
                     questLocation = {
                         title = L.Category_Quest_Location,
                         module = L.Module_Quest,
@@ -1077,7 +1081,7 @@ function PerspectiveOptions:LoadDefaults()
                         title = L.Category_Town_Guild_Bank,
                         module = L.Module_Town,
                         fontColor = "ffabf8cb",
-                        showLines = false, 
+                        showLines = false,
                         iconWidth = 36,
                         iconHeight = 36,
                         icon = "PerspectiveSprites:Town-GBank" },
@@ -1085,7 +1089,7 @@ function PerspectiveOptions:LoadDefaults()
                         title = L.Category_Town_Guild_Registrar,
                         module = L.Module_Town,
                         fontColor = "ffabf8cb",
-                        showLines = false, 
+                        showLines = false,
                         iconWidth = 36,
                         iconHeight = 36,
                         icon = "PerspectiveSprites:Town-Registrar" },
@@ -1094,7 +1098,7 @@ function PerspectiveOptions:LoadDefaults()
                         module = L.Module_Town,
                         disabled = true,
                         fontColor = "ffabf8cb",
-                        showLines = false, 
+                        showLines = false,
                         iconWidth = 36,
                         iconHeight = 36,
                         icon = "PerspectiveSprites:Town-Directions" },
@@ -1319,7 +1323,7 @@ function PerspectiveOptions:LoadControls()
                 IconColor               = { option = "iconColor" },
                 LineColor               = { option = "lineColor" },
                 RangeColor              = { option = "rangeColor" } } ,
-            Buttons                     = { 
+            Buttons                     = {
                 BackButton              = {},
                 DeleteButton            = {},
                 DefaultButton           = {} } },
@@ -1400,7 +1404,7 @@ function PerspectiveOptions:ShowTargetInfo()
                     arAccountFriends[tChar.strCharacterName] = tFriend.strCharacterName
                 end
             end
-        end        
+        end
 
         appendLine("Name: " .. target:GetName())
         appendLine("AccountName: " .. tostring(arAccountFriends[target:GetName()]))
@@ -1477,8 +1481,8 @@ function PerspectiveOptions:ShowTargetInfo()
 end
 
 function PerspectiveOptions:GetOptionValue(ui, option, category)
-    local category = category 
-    
+    local category = category
+
     if not category and ui then
         category = ui.category or "default"
     end
@@ -1495,7 +1499,7 @@ function PerspectiveOptions:GetOptionValue(ui, option, category)
             return self.db.defaults.profile[self.profile].categories.default[option]
         end
     end
-    
+
     return nil
 end
 
@@ -1569,10 +1573,10 @@ function PerspectiveOptions:SetPixie(window, index, options)
 end
 
 function PerspectiveOptions:CColorToString(color)
-    return string.format("%02X%02X%02X%02X", 
+    return string.format("%02X%02X%02X%02X",
         math.floor(color.a * 255 + 0.5),
-        math.floor(color.r * 255 + 0.5), 
-        math.floor(color.g * 255 + 0.5), 
+        math.floor(color.r * 255 + 0.5),
+        math.floor(color.g * 255 + 0.5),
         math.floor(color.b * 255 + 0.5))
 end
 
@@ -1590,7 +1594,7 @@ function PerspectiveOptions:StringToCColor(str)
     local val = tonumber(str, 16)
 
     if val then
-        r = math.floor(val / 65536) 
+        r = math.floor(val / 65536)
         g = math.floor(val / 256) % 256
         b = val % 256
         a = alpha % 256
@@ -1600,7 +1604,7 @@ function PerspectiveOptions:StringToCColor(str)
 end
 
 function PerspectiveOptions:ArrangeChildren(window, type)
-    local sort = function (a, b) 
+    local sort = function (a, b)
         a = a:GetData().sortValue
         b = b:GetData().sortValue
 
@@ -1703,11 +1707,11 @@ function PerspectiveOptions:InitializeOptions()
         local button = module:FindChild("Button")
 
         self:ModuleItemChecked(nil, button, nil)
-    end 
+    end
 
 
 
-        
+
 
     -- Let the addon know we are now fully initialized.
     self.initialized = true
@@ -1720,10 +1724,10 @@ function PerspectiveOptions:ModuleItemInitialize(category, module)
     if not item then
         -- Create a new module item.
         item = Apollo.LoadForm(self.xmlDoc, "ModuleItem", self.ModuleList, self)
-        
+
         -- Get the button
         button = item:FindChild("Button")
-        
+
         -- Setup the button event handlers
         button:AddEventHandler("ButtonCheck", "ModuleItemChecked")
         button:AddEventHandler("ButtonUncheck", "ModuleItemChecked")
@@ -1787,7 +1791,7 @@ function PerspectiveOptions:ModuleItemChecked(handler, control, button)
 end
 
 function PerspectiveOptions:CategoryItemInitialize(category, module)
-    
+
     local item = self.CategoryList:FindChild("CategoryItem" .. category)
 
     local button, check
@@ -1799,7 +1803,7 @@ function PerspectiveOptions:CategoryItemInitialize(category, module)
         button = item:FindChild("Button")
 
         check = button:FindChild("Check")
-        
+
         button:AddEventHandler("ButtonSignal", "CategoryItemClicked")
         check:AddEventHandler("ButtonCheck", "CategoryItemChecked")
         check:AddEventHandler("ButtonUncheck", "CategoryItemChecked")
@@ -1824,8 +1828,8 @@ function PerspectiveOptions:CategoryItemInitialize(category, module)
     local sortBy = category == "all" and "_first" or self:GetOptionValue(nil, "title", category)
 
     -- Set the data for the item.
-    item:SetData({ 
-        category = category, 
+    item:SetData({
+        category = category,
         module = module,
         sortValue = sortBy
     })
@@ -1855,7 +1859,7 @@ function PerspectiveOptions:CategoryItemChecked(handler, control, button)
 
     -- Disable/Enable the category
     self.db.profile[self.profile].categories[category].disabled = not control:IsChecked()
-    
+
     if category == "all" then
         for c, cat in pairs(self.db.profile[self.profile].categories) do
             if (self.module == L.Module_All and c ~= "default") or cat.module == self.module then
@@ -1869,7 +1873,7 @@ function PerspectiveOptions:CategoryItemChecked(handler, control, button)
     else
         -- Toggle the category
         self.db.profile[self.profile].categories[category].disabled = not control:IsChecked()
-    end 
+    end
 
     --Perspective:Restart()
     Perspective:UpdateOptions(nil, true)
@@ -1884,7 +1888,7 @@ function PerspectiveOptions:EditorInitialize(category)
 
         -- Disable the line texts
         if option == "limitBy" then
-            if category == "pathLocation" or 
+            if category == "pathLocation" or
                 category == "questLocation" or
                 category == "eventLocation" or
                 category == "challengeLocation" then
@@ -1892,7 +1896,7 @@ function PerspectiveOptions:EditorInitialize(category)
             else
                 control:Enable(true)
             end
-        end     
+        end
 
         -- Get the menu associated with the control
         local menu = self.Editor:FindChild(name .. "DropDownMenu")
@@ -1925,7 +1929,7 @@ function PerspectiveOptions:EditorInitialize(category)
     self:SetPixie(self.Editor, 1, { sprite = icon, color = color })
 
     local custom = self:GetOptionValue(nil, "custom", category)
-    
+
     local catEdit = self.Editor:FindChild("CategoryEdit")
 
     -- Set the rename text
@@ -2032,11 +2036,11 @@ end
 function PerspectiveOptions:ImportSettings()
     -- Parse the dialog text.
     local profile, pos, err = JSON.decode(self.Dialog:FindChild("TextBox"):GetText())
-    
+
     -- Fail to decode json.
     if not profile then
         Print("Failed to import settings.  Error at pos: " .. pos .. " Error: " .. err)
-        return 
+        return
     end
 
     --self.db.profile = {}
@@ -2074,7 +2078,7 @@ function PerspectiveOptions:ButtonInitialize(parent, name, category, options)
     control:SetText(L["UI_" .. parent .. "_" .. name .. "_Text"])
 
     -- Set the control toolip.
-    control:SetTooltip(L["UI_" .. parent .. "_" .. name .. "_Tooltip"]) 
+    control:SetTooltip(L["UI_" .. parent .. "_" .. name .. "_Tooltip"])
 
     -- Make sure we haven't already set the event handlers
     if not control:GetData() then
@@ -2162,7 +2166,7 @@ function PerspectiveOptions:ButtonClickedEditorDefaultButton(handler, control, b
     self:EditorInitialize(data.category)
 
     -- Update all the uis
-    Perspective:UpdateOptions(nil, true)    
+    Perspective:UpdateOptions(nil, true)
 end
 
 -----------------------------------------------------------------------------------------
@@ -2175,7 +2179,7 @@ function PerspectiveOptions:CheckButtonInitialize(parent, name, category, option
 
     -- Set the control text.
     control:SetText(L["UI_" .. parent .. "_" .. name .. "_Text"])
-    
+
     -- Set the control toolip.
     control:SetTooltip(L["UI_" .. parent .. "_" .. name .. "_Tooltip"] or "")
 
@@ -2194,7 +2198,7 @@ function PerspectiveOptions:CheckButtonInitialize(parent, name, category, option
             category == "eventLocation" or
             category == "pathLocation" or
             category == "challengeLocation" then
-            if options.option == "disableInCombat" or 
+            if options.option == "disableInCombat" or
                 options.option == "disableOccluded" or
                 options.option == "showLines" or
                 options.option == "showLineOutline" or
@@ -2227,7 +2231,7 @@ end
 function PerspectiveOptions:CheckButtonClickedEditor(handler, control, button)
     -- Get the control's data
     local data = control:GetData()
-    
+
     -- Get the control's value
     local val = control:IsChecked()
 
@@ -2239,7 +2243,7 @@ function PerspectiveOptions:CheckButtonClickedEditor(handler, control, button)
             end
         end
     else
-        self.db.profile[self.profile].categories[data.category][data.options.option] = val  
+        self.db.profile[self.profile].categories[data.category][data.options.option] = val
     end
 
     if data.category == "questLocation" or
@@ -2250,18 +2254,18 @@ function PerspectiveOptions:CheckButtonClickedEditor(handler, control, button)
         Perspective:MarkersInit()
     else
         -- Update all the ui options.
-        Perspective:UpdateOptions(nil, (data.options.option == "disabled")) 
+        Perspective:UpdateOptions(nil, (data.options.option == "disabled"))
     end
 end
 
 function PerspectiveOptions:CheckButtonClickedSettings(handler, control, button)
     -- Get the control's data
     local data = control:GetData()
-    
+
     -- Get the control's value
     local val = control:IsChecked()
 
-    self.db.profile[self.profile].settings[data.options.option] = val   
+    self.db.profile[self.profile].settings[data.options.option] = val
 
     if data.options.option == "disabled" then
         if val then
@@ -2302,7 +2306,7 @@ function PerspectiveOptions:TextBoxInitialize(parent, name, category, options)
 
     -- Set the control toolip.
     control:SetTooltip(L["UI_" .. parent .. "_" .. name .. "_Tooltip"] .. "  " .. L.UI_Options_Tooltip_Action)
-    
+
     -- Set the textbox value.
     if category == "settings" then
         -- Settings checkbutton
@@ -2319,7 +2323,7 @@ function PerspectiveOptions:TextBoxInitialize(parent, name, category, options)
             category == "eventLocation" or
             category == "pathLocation" or
             category == "challengeLocation" then
-            if options.option == "maxLines" or 
+            if options.option == "maxLines" or
                 options.option == "lineWidth" or
                 options.option == "zDistance" or
                 options.option == "display" or
@@ -2337,7 +2341,7 @@ function PerspectiveOptions:TextBoxInitialize(parent, name, category, options)
         edit:AddEventHandler("EditBoxTab",      "TextBoxReturn" .. parent)
         edit:AddEventHandler("EditBoxEscape",   "TextBoxEscape" .. parent)
     end
-    
+
     -- Set the data for the control.
     edit:SetData({ category = category, options = options })
 end
@@ -2359,7 +2363,7 @@ function PerspectiveOptions:TextBoxReturnEditor(handler, control)
     end
 
     -- If the option is blank, load the default setting.
-    if val == "" then 
+    if val == "" then
         val = self:GetOptionValue(nil, data.options.option, data.category)
     end
 
@@ -2374,7 +2378,7 @@ function PerspectiveOptions:TextBoxReturnEditor(handler, control)
             end
         end
     else
-        self.db.profile[self.profile].categories[data.category][data.options.option] = val  
+        self.db.profile[self.profile].categories[data.category][data.options.option] = val
 
         if data.options.option == "icon" then
             self:Editor_UpdateIcon(data.category)
@@ -2390,7 +2394,7 @@ function PerspectiveOptions:TextBoxReturnEditor(handler, control)
             Perspective:MarkersInit()
         else
             -- Update all the ui options.
-            Perspective:UpdateOptions() 
+            Perspective:UpdateOptions()
         end
     else
         self:InitializeOptions()
@@ -2420,7 +2424,7 @@ function PerspectiveOptions:TextBoxReturnEditorCategoryEdit(handler, control)
         control:SetText(oldCategory)
     else
         self.db.profile[self.profile].categories[category] = {}
-        
+
         for k, v in pairs(self.db.profile[self.profile].categories[oldCategory] or {}) do
             self.db.profile[self.profile].categories[category][k] = v
         end
@@ -2450,7 +2454,7 @@ function PerspectiveOptions:TextBoxReturnSettings(handler, control)
     local val = control:GetText()
 
     -- If the option is blank, load the default setting.
-    if val == "" then 
+    if val == "" then
         val = defaults.profile.default.settings[data.options.option]
         control.SetText(val)
     end
@@ -2464,13 +2468,13 @@ function PerspectiveOptions:TextBoxReturnSettings(handler, control)
         end
     end
 
-    self.db.profile[self.profile].settings[data.options.option] = val   
+    self.db.profile[self.profile].settings[data.options.option] = val
 
     -- Update the markers.
     Perspective:MarkersInit()
 
     -- Update all the ui options.
-    Perspective:UpdateOptions() 
+    Perspective:UpdateOptions()
 end
 
 function PerspectiveOptions:TextBoxEscapeSettings(handler, control)
@@ -2494,9 +2498,9 @@ function PerspectiveOptions:ColorButtonInitialize(parent, name, category, option
 
     -- Set the textbox label.
     self:SetPixie(control, 1, { text = L["UI_" .. parent .. "_" .. name .. "_Text"], flagsText = { DT_VCENTER = true } })
-    
+
     -- Set the control tooltip.
-    control:SetTooltip(L["UI_" .. parent .. "_" .. name .. "_Tooltip"]) 
+    control:SetTooltip(L["UI_" .. parent .. "_" .. name .. "_Tooltip"])
 
     -- Set the button value
     if category then
@@ -2511,7 +2515,7 @@ function PerspectiveOptions:ColorButtonInitialize(parent, name, category, option
             category == "eventLocation" or
             category == "pathLocation" or
             category == "challengeLocation" then
-            if options.option == "lineColor" or 
+            if options.option == "lineColor" or
                 options.option == "rangeColor" then
                 -- Hide the checkbutton
                 control:Show(false, true)
@@ -2570,7 +2574,7 @@ function PerspectiveOptions:ColorButtonClickedEditor(handler, control, button)
             Perspective:MarkersInit()
         else
             -- Update all the ui options.
-            Perspective:UpdateOptions() 
+            Perspective:UpdateOptions()
         end
 
         -- Set the data for the control.
@@ -2589,7 +2593,7 @@ function PerspectiveOptions:ColorButtonClickedEditor(handler, control, button)
     else
         ChatSystemLib.PostOnChannel(ChatSystemLib.ChatChannel_Realm, "This option requires the ColorPicker addon to be installed.")
     end
-end 
+end
 
 
 
@@ -2656,7 +2660,7 @@ function PerspectiveOptions:Editor_OnColorClick(handler, control, button)
     local function setColor(data)
         -- Convert the color back to str
         local color = self:CColorToString(self.color)
-        
+
         -- Set the control color
         control:SetBGColor(color)
 
@@ -2680,7 +2684,7 @@ function PerspectiveOptions:Editor_OnColorClick(handler, control, button)
         end
 
         -- Update all the ui options.
-        Perspective:UpdateOptions() 
+        Perspective:UpdateOptions()
 
         -- Update the markers.
         Perspective:MarkersInit()
@@ -2733,7 +2737,7 @@ function PerspectiveOptions:Settings_CheckInit(name, option)
     if not control:GetData() then
         --Setup the event handlers
         control:AddEventHandler("ButtonCheck",      "Settings_OnChecked")
-        control:AddEventHandler("ButtonUncheck",    "Settings_OnChecked")   
+        control:AddEventHandler("ButtonUncheck",    "Settings_OnChecked")
     end
 
     -- Set the data for the control.
@@ -2742,13 +2746,13 @@ end
 
 function PerspectiveOptions:Settings_TimerInit(name, value, numDecimal, unit, divBy, tickFunc)
     local control = self["Settings"]:FindChild(name)
-    
+
     control:SetTooltip(L["UI_Settings_" .. name .. "_Tooltip"])
 
     control:FindChild(name .. "Label"):SetText(L["UI_Settings_" .. name .. "_Text"])
-    
+
     local slider = control:FindChild("Slider")
-    
+
     local text = self.Settings:FindChild(name .. "Text")
 
     local val = tonumber(Apollo.FormatNumber(self.db.profile[self.profile].settings[value], numDecimal))
@@ -2759,7 +2763,7 @@ function PerspectiveOptions:Settings_TimerInit(name, value, numDecimal, unit, di
 
         -- Set the text value.
         text:SetText(val .. " " .. unit)
-        
+
         -- Make sure we haven't already set the event handlers
         if not slider:GetData() then
             -- Set the event handler
@@ -2767,26 +2771,26 @@ function PerspectiveOptions:Settings_TimerInit(name, value, numDecimal, unit, di
         end
 
         -- Associate the text control with the slider.
-        slider:SetData({ 
-            text = text, 
-            value = value, 
-            numDecimal = numDecimal, 
+        slider:SetData({
+            text = text,
+            value = value,
+            numDecimal = numDecimal,
             unit = unit,
             divBy = divBy,
-            tickFunc = tickFunc 
+            tickFunc = tickFunc
         })
     end
 end
 
 function PerspectiveOptions:Settings_OpacityInit(name, value, numDecimal, unit)
     local control = self["Settings"]:FindChild(name)
-    
+
     control:SetTooltip(L["UI_Settings_" .. name .. "_Tooltip"])
 
     control:FindChild(name .. "Label"):SetText(L["UI_Settings_" .. name .. "_Text"])
-    
+
     local slider = control:FindChild("Slider")
-    
+
     local text = self.Settings:FindChild(name .. "Text")
 
     local val = tonumber(Apollo.FormatNumber(self.db.profile[self.profile].settings[value], numDecimal))
@@ -2797,7 +2801,7 @@ function PerspectiveOptions:Settings_OpacityInit(name, value, numDecimal, unit)
 
         -- Set the text value.
         text:SetText(val .. " " .. unit)
-        
+
         -- Make sure we haven't already set the event handlers
         if not slider:GetData() then
             -- Set the event handler
@@ -2805,10 +2809,10 @@ function PerspectiveOptions:Settings_OpacityInit(name, value, numDecimal, unit)
         end
 
         -- Associate the text control with the slider.
-        slider:SetData({ 
-            text = text, 
-            value = value, 
-            numDecimal = numDecimal, 
+        slider:SetData({
+            text = text,
+            value = value,
+            numDecimal = numDecimal,
             unit = unit,
             convertedValue = "convertedOpacity"
         })
@@ -2829,7 +2833,7 @@ function PerspectiveOptions:Settings_TextInit(name, option, isNumber)
         control:AddEventHandler("EditBoxTab",       "Settings_OnTextReturn")
         control:AddEventHandler("EditBoxEscape",    "Settings_OnTextEscape")
     end
-        
+
     -- Set the data for the control.
     control:SetData({ option = option, isNumber = isNumber })
 end
@@ -2837,7 +2841,7 @@ end
 function PerspectiveOptions:Settings_OnChecked(handler, control, button)
     -- Get the control's data
     local data = control:GetData()
-    
+
     -- Get the control's value
     local val = control:IsChecked()
 
@@ -2849,7 +2853,7 @@ function PerspectiveOptions:Settings_OnChecked(handler, control, button)
             Perspective:Stop()
         else
             Perspective:Start()
-        end 
+        end
     end
 end
 
@@ -2912,7 +2916,7 @@ function PerspectiveOptions:Settings_OnTextReturn(handler, control)
     end
 
     -- If the option is blank, load the default setting.
-    if val == "" then 
+    if val == "" then
         val = self.db.profile[self.profile].settings[data.option]
     end
 
@@ -2927,7 +2931,7 @@ end
 function PerspectiveOptions:Settings_OnTextEscape(handler, control)
     -- Get the control's data
     local data = control:GetData()
-    
+
     -- Load the previous value
     control:SetText(self.db.profile[self.profile].settings[data.option])
 end
