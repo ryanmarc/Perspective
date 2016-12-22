@@ -114,31 +114,49 @@ function PerspectiveOptions:OnInitialize()
 
     -- Register the slash command
     --Apollo.RegisterSlashCommand("perspective", "ShowOptions", self)
+    Apollo.RegisterSlashCommand("per", "OnSlashCommand", self)
     Apollo.RegisterSlashCommand("pti", "ShowTargetInfo", self)
     Apollo.RegisterSlashCommand("deadzone", "DeadzoneInfo", self)
     Apollo.RegisterSlashCommand("perspective", "OnSlashCommand", self)
 end
 
-function PerspectiveOptions:OnSlashCommand(cmd, params)
-    local function print(str)
-        ChatSystemLib.PostOnChannel(ChatSystemLib.ChatChannel_Command, str, "")
-    end
+local pHelpShown = false
 
+local function chatprint(str)
+    ChatSystemLib.PostOnChannel(ChatSystemLib.ChatChannel_Command, str, "")
+end
+
+local function PrintHelp()
+    chatprint("Perspective")
+    chatprint("To display the configuration window use:")
+    chatprint("/perspective show")
+    chatprint(" ")
+    chatprint("To load a profile from another character use:")
+    chatprint("/perspective profile Character - Server")
+    chatprint("Example: Where Credit is the character and Avatus is the server.")
+    chatprint("/perspective profile Credit - Avatus")
+end
+
+function PerspectiveOptions:OnSlashCommand(cmd, params)
     local p = string.lower(params)
 
     if not p or p == "" then
-        print("Perspective")
-        print("To display the configuration window use:")
-        print("/perspective show")
-        print("To load a profile from another character use:")
-        print("/perspective profile Character - Server")
-        print("Example: Where Credit is the character and Avatus is the server.")
-        print("/perspective profile Credit - Avatus")
-    elseif p == "show" then
+        if pHelpShown then
+            self:ShowOptions()
+            return
+        else
+            self:ShowOptions()
+        end
+
+        PrintHelp()
+        pHelpShown = true
+    elseif p == "help" or p == "h" or p == "?" then
+        PrintHelp()
+    elseif p == "show" or p == "o" then
         self:ShowOptions()
-    elseif p == "stop" then
+    elseif p == "stop" or p == "0" then
         Perspective:Stop()
-    elseif p == "start" then
+    elseif p == "start" or p == "1" then
         Perspective:Start()
     elseif string.sub(params, 1, 7) == "profile" then
         local profile = string.sub(params, 9)
