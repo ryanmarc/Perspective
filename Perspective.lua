@@ -4,6 +4,10 @@ require "Apollo"
 require "Quest"
 require "QuestLib"
 
+local Major, Minor, Patch, Suffix = 1, 5, 0, 0
+
+local PERSPECTIVE_CURRENT_VERSION = string.format("%d.%d.%d", Major, Minor, Patch)
+
 local os, type, pairs = os, type, pairs
 local table = table
 local math = math
@@ -67,23 +71,23 @@ local challengeUnits = {}
 
 -- Lookup tables to save ourselves a lot of work and fake an oval dead zone around character
 local DeadzoneAnglesLookup = {
-    { Deg = -90, Rad = -1.5707963267949, NextRad = -1.48352986419518, Length = 250, WideLength = 250, DeltaRad = 0.0872664625997164, DeltaLength = -5, DeltaWideLength = -3 }, 
-    { Deg = -85, Rad = -1.48352986419518, NextRad = -1.39626340159546, Length = 245, WideLength = 247, DeltaRad = 0.0872664625997166, DeltaLength = -13, DeltaWideLength = -2 }, 
-    { Deg = -80, Rad = -1.39626340159546, NextRad = -1.30899693899575, Length = 232, WideLength = 245, DeltaRad = 0.0872664625997164, DeltaLength = -17, DeltaWideLength = -6 }, 
-    { Deg = -75, Rad = -1.30899693899575, NextRad = -1.13446401379631, Length = 215, WideLength = 239, DeltaRad = 0.174532925199433, DeltaLength = -45, DeltaWideLength = -17 }, 
-    { Deg = -65, Rad = -1.13446401379631, NextRad = -0.959931088596881, Length = 170, WideLength = 222, DeltaRad = 0.174532925199433, DeltaLength = -35, DeltaWideLength = -22 }, 
-    { Deg = -55, Rad = -0.959931088596881, NextRad = -0.785398163397448, Length = 135, WideLength = 200, DeltaRad = 0.174532925199433, DeltaLength = -30, DeltaWideLength = -26 }, 
-    { Deg = -45, Rad = -0.785398163397448, NextRad = -0.523598775598299, Length = 105, WideLength = 174, DeltaRad = 0.261799387799149, DeltaLength = -30, DeltaWideLength = -39 }, 
-    { Deg = -30, Rad = -0.523598775598299, NextRad = 0, Length = 75, WideLength = 135, DeltaRad = 0.523598775598299, DeltaLength = -30, DeltaWideLength = -62 }, 
-    { Deg = 0, Rad = 0, NextRad = 0.785398163397448, Length = 45, WideLength = 73, DeltaRad = 0.785398163397448, DeltaLength = -10, DeltaWideLength = -40 }, 
-    { Deg = 45, Rad = 0.785398163397448, NextRad = 1.5707963267949, Length = 35, WideLength = 33, DeltaRad = 0.785398163397448, DeltaLength = 0, DeltaWideLength = -6 }, 
+    { Deg = -90, Rad = -1.5707963267949, NextRad = -1.48352986419518, Length = 250, WideLength = 250, DeltaRad = 0.0872664625997164, DeltaLength = -5, DeltaWideLength = -3 },
+    { Deg = -85, Rad = -1.48352986419518, NextRad = -1.39626340159546, Length = 245, WideLength = 247, DeltaRad = 0.0872664625997166, DeltaLength = -13, DeltaWideLength = -2 },
+    { Deg = -80, Rad = -1.39626340159546, NextRad = -1.30899693899575, Length = 232, WideLength = 245, DeltaRad = 0.0872664625997164, DeltaLength = -17, DeltaWideLength = -6 },
+    { Deg = -75, Rad = -1.30899693899575, NextRad = -1.13446401379631, Length = 215, WideLength = 239, DeltaRad = 0.174532925199433, DeltaLength = -45, DeltaWideLength = -17 },
+    { Deg = -65, Rad = -1.13446401379631, NextRad = -0.959931088596881, Length = 170, WideLength = 222, DeltaRad = 0.174532925199433, DeltaLength = -35, DeltaWideLength = -22 },
+    { Deg = -55, Rad = -0.959931088596881, NextRad = -0.785398163397448, Length = 135, WideLength = 200, DeltaRad = 0.174532925199433, DeltaLength = -30, DeltaWideLength = -26 },
+    { Deg = -45, Rad = -0.785398163397448, NextRad = -0.523598775598299, Length = 105, WideLength = 174, DeltaRad = 0.261799387799149, DeltaLength = -30, DeltaWideLength = -39 },
+    { Deg = -30, Rad = -0.523598775598299, NextRad = 0, Length = 75, WideLength = 135, DeltaRad = 0.523598775598299, DeltaLength = -30, DeltaWideLength = -62 },
+    { Deg = 0, Rad = 0, NextRad = 0.785398163397448, Length = 45, WideLength = 73, DeltaRad = 0.785398163397448, DeltaLength = -10, DeltaWideLength = -40 },
+    { Deg = 45, Rad = 0.785398163397448, NextRad = 1.5707963267949, Length = 35, WideLength = 33, DeltaRad = 0.785398163397448, DeltaLength = 0, DeltaWideLength = -6 },
     { Deg = 90, Rad = 1.5707963267949, NextRad = 2.35619449019234, Length = 35, WideLength = 27, DeltaRad = 0.785398163397448, DeltaLength = 0, DeltaWideLength = 0 }
 }
 local DeadzoneRaceLookup = {
-    [1] = { Race = "Exile Human", Scale = 1.1, Wide = 0 }, 
-    [3] = { Race = "Granok", Scale = 1.0, Wide = 1 }, 
-    [4] = { Race = "Aurin", Scale = 0.9, Wide = 0 }, 
-    [13] = { Race = "Chua", Scale = 0.70, Wide = 0 }, 
+    [1] = { Race = "Exile Human", Scale = 1.1, Wide = 0 },
+    [3] = { Race = "Granok", Scale = 1.0, Wide = 1 },
+    [4] = { Race = "Aurin", Scale = 0.9, Wide = 0 },
+    [13] = { Race = "Chua", Scale = 0.70, Wide = 0 },
     [16] = { Race = "Mordesh", Scale = 1.05, Wide = 0 }
 }
 
@@ -116,7 +120,7 @@ function Perspective:OnInitialize()
     self.sorted     = {
         prioritized = {},
         categorized = {} }
-    
+
     -- Table of the current active challenges
     self.challenges = {}
 
@@ -134,22 +138,22 @@ function Perspective:OnInitialize()
     -- Path marker windows
     self.markers = {}
     self.markersInitialized = false
-    
+
     self.inRaid = false
 
     self.arAccountFriends = {}
     self:PrepareAccountFriends()
 
-    -- Register our addon events    
+    -- Register our addon events
     Apollo.RegisterEventHandler("ResolutionChanged",                    "OnResolutionChanged", self)
     Apollo.RegisterEventHandler("UnitCreated",                          "OnUnitCreated", self)
     Apollo.RegisterEventHandler("UnitDestroyed",                        "OnUnitDestroyed", self)
-    Apollo.RegisterEventHandler("ChangeWorld",                          "OnWorldChanged", self) 
+    Apollo.RegisterEventHandler("ChangeWorld",                          "OnWorldChanged", self)
     Apollo.RegisterEventHandler("QuestInit",                            "OnQuestInit", self)
     Apollo.RegisterEventHandler("QuestObjectiveUpdated",                "OnQuestObjectiveUpdated", self)
     Apollo.RegisterEventHandler("QuestStateChanged",                    "OnQuestStateChanged", self)
-    Apollo.RegisterEventHandler("QuestTrackedChanged",                  "OnQuestTrackedChanged", self)  
-    Apollo.RegisterEventHandler("ChallengeActivate",                    "OnChallengeActivated", self) 
+    Apollo.RegisterEventHandler("QuestTrackedChanged",                  "OnQuestTrackedChanged", self)
+    Apollo.RegisterEventHandler("ChallengeActivate",                    "OnChallengeActivated", self)
     Apollo.RegisterEventHandler("ChallengeAbandon",                     "OnChallengeRemoved", self)
     Apollo.RegisterEventHandler("ChallengeCompleted",                   "OnChallengeRemoved", self)
     Apollo.RegisterEventHandler("ChallengeFailArea",                    "OnChallengeRemoved", self)
@@ -164,7 +168,7 @@ function Perspective:OnInitialize()
     Apollo.RegisterEventHandler("TargetUnitChanged",                    "OnTargetUnitChanged", self)
     Apollo.RegisterEventHandler("AlternateTargetUnitChanged",           "OnAlternateTargetUnitChanged", self)
     Apollo.RegisterEventHandler("PublicEventStart",                     "OnPublicEventUpdate", self)
-    Apollo.RegisterEventHandler("PublicEventObjectiveUpdate",           "OnPublicEventUpdate", self)    
+    Apollo.RegisterEventHandler("PublicEventObjectiveUpdate",           "OnPublicEventUpdate", self)
     Apollo.RegisterEventHandler("PublicEventLocationAdded",             "OnPublicEventUpdate", self)
     Apollo.RegisterEventHandler("PublicEventLocationRemoved",           "OnPublicEventUpdate", self)
     Apollo.RegisterEventHandler("PublicEventObjectiveLocationAdded",    "OnPublicEventUpdate", self)
@@ -191,6 +195,8 @@ function Perspective:OnInitialize()
         [L.Unit_Roan_Skull]                     = { challenge = 576 },
         [L.Unit_Shipwrecked_Victim]             = { challenge = 603 }
     }
+
+	Event_FireGenericEvent("OneVersion_ReportAddonInfo", "Perspective", Major, Minor, Patch, Suffix, false)
 end
 
 function Perspective:OnResolutionChanged()
@@ -238,7 +244,7 @@ function Perspective:Start()
         end
 
         self:MarkersInit()
-        
+
         -- Load the timers
         self:SetTimers()
     end
@@ -302,7 +308,7 @@ end
 function Perspective:OnNextFrame()
     if not Options.db.profile[Options.profile].settings.disabled then
         -- Save player unit & Race Id
-        
+
 
         self:UpdateTimers()
     end
@@ -382,16 +388,16 @@ end
 function Perspective:AddPixie(ui, pPos, pixies, items, lines)
     local unit = self:GetUnitById(ui.id)
 
-    if unit then -- check for pvp visiblity?then                
+    if unit then -- check for pvp visiblity?then
         local isOccluded = unit:IsOccluded()
 
         if isOccluded and unit:IsPvpFlagged() and unit:GetDispositionTo(GameLib.GetPlayerUnit()) == 0 then
-            -- pvp hostile player, this will cause errors on drawing because we only know its last 
+            -- pvp hostile player, this will cause errors on drawing because we only know its last
             -- known location cause the line to go crazy off the screen
             return
         end
 
-        if not ui.disabled and 
+        if not ui.disabled and
             ui.inRange and
             not (ui.disableInCombat and GameLib.GetPlayerUnit():IsInCombat()) and
             table.getn(pixies) < Options.db.profile[Options.profile].settings.max
@@ -399,7 +405,7 @@ function Perspective:AddPixie(ui, pPos, pixies, items, lines)
 
             -- Update the units position
             local uPos = GameLib.GetUnitScreenPosition(unit)
-        
+
             if uPos then
                 local showItem = true
                 local showLine = true
@@ -433,15 +439,15 @@ function Perspective:AddPixie(ui, pPos, pixies, items, lines)
                 -- Either the item or line are able to be shown.
                 if showItem or showLine then
                     -- Add the unit to the draw list.
-                    table.insert(pixies, { 
-                        ui = ui, 
+                    table.insert(pixies, {
+                        ui = ui,
                         unit = unit,
-                        uPos = uPos, 
-                        pPos = pPos, 
-                        showItem = showItem, 
-                        showLine = showLine 
+                        uPos = uPos,
+                        pPos = pPos,
+                        showItem = showItem,
+                        showLine = showLine
                     })
-                    
+
                     -- Increase our limits.
                     if ui.limitBy and ui.limitId then
                         for i, id in pairs(ui.limitId) do
@@ -512,12 +518,12 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
             local xyDist = xDist * xDist + yDist * yDist
             local vectorLength = (xyDist^(-0.5)) * xyDist
 
-            -- Get line distance offset based on angle, scale for camera position 
+            -- Get line distance offset based on angle, scale for camera position
             local lineOffsetFromCenter = self:GetLineOffsetFromCenter(yDist, vectorLength)
             if (deadzone ~= nil) then lineOffsetFromCenter = lineOffsetFromCenter * deadzone.scale end
 
             -- Don't draw "outside-in" lines or if the result will be less than 10 pixels long
-            if (lineOffsetFromCenter + 25 < vectorLength) then 
+            if (lineOffsetFromCenter + 25 < vectorLength) then
                 -- Get the ratio of the line distance from the center of the screen to the vector length
                 local lengthRatio = lineOffsetFromCenter / vectorLength
 
@@ -529,18 +535,18 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
             end
         end
 
-        if drawLine == 1 then 
+        if drawLine == 1 then
 
-            if self.dottedLines == true then 
-            -- if true then 
-                -- Draw Dots! 
-                -- First dumb approach, and it seems to work OK:  
-                --      draw dot at start, 
+            if self.dottedLines == true then
+            -- if true then
+                -- Draw Dots!
+                -- First dumb approach, and it seems to work OK:
+                --      draw dot at start,
                 --      then one extra dot at ~half (configurable) remaining distance (maybe with a max jump length)
                 --      until 20 pixels remain on either X or Y axis (really do NOT want to spam SQRT)
 
-                -- Remove this from here once this is a config entry. 
-                -- MUST be between 0.1 and 1.0. Really. If it's 0 or less, or >1, it will crash. 
+                -- Remove this from here once this is a config entry.
+                -- MUST be between 0.1 and 1.0. Really. If it's 0 or less, or >1, it will crash.
                 -- (don't wanna validate it here 100 times, config UI should guarantee value! let config file hackers crash!)
                 -- SHOULD be between 0.33 and 0.66, sweet spot is 0.5
                 -- self.lineStep = 0.5
@@ -558,25 +564,25 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                 for i = 1, 6 do
                     local ratio = i/10
 
-                    -- Draw Dot 
+                    -- Draw Dot
                     self.Overlay:AddPixie( {
                             strSprite = "PerspectiveSprites:small-circle", cr = self:HandleGlobalAlpha(ui.cLineColor),
                                 loc = { fPoints = pixieLocPoints, nOffsets = { drawX - 5, drawY - 5, drawX + 5, drawY + 5 } }
                         } )
 
-                    -- How far do we still have to go? Stop if close enough 
+                    -- How far do we still have to go? Stop if close enough
                     deltaX = (targetX - drawX)
                     deltaY = (targetY - drawY)
 
-                --  -- Step up to the next dot 
+                --  -- Step up to the next dot
                     drawX = drawX + deltaX * ratio
                     drawY = drawY + deltaY * ratio
                 end
 
                 -- Only draw final dot if not showing item name/icon
-                if not showItem then 
+                if not showItem then
                     self.Overlay:AddPixie( {
-                            strSprite = "PerspectiveSprites:small-circle", cr = self:HandleGlobalAlpha(ui.cLineColor), 
+                            strSprite = "PerspectiveSprites:small-circle", cr = self:HandleGlobalAlpha(ui.cLineColor),
                             loc = { fPoints = pixieLocPoints, nOffsets = { targetX - 5, targetY - 5, targetX + 5, targetY + 5 } }
                         } )
                 end
@@ -609,8 +615,8 @@ function Perspective:DrawPixie(ui, unit, uPos, pPos, showItem, showLine, dottedL
                     strSprite = ui.icon, cr = self:HandleGlobalAlpha(ui.cIconColor),
                     loc = { fPoints = pixieLocPoints, nOffsets = { uPos.nX - (ui.scaledWidth / 2),  uPos.nY - (ui.scaledHeight / 2),  uPos.nX + (ui.scaledWidth / 2), uPos.nY + (ui.scaledHeight / 2) } }
                 } )
-        end     
-        
+        end
+
         -- Draw the text
         if ui.showName or ui.showDistance then
             local text = ""
@@ -635,7 +641,7 @@ function Perspective:OnTimerDraw()
     -- Perspective is disabled
     if Options.db.profile[Options.profile].settings.disabled then return end
 
-    if (self.Player == nil) then 
+    if (self.Player == nil) then
         local p = GameLib.GetPlayerUnit()
         if (p:IsValid()) then self.Player = p end
     end
@@ -644,14 +650,14 @@ function Perspective:OnTimerDraw()
     local pixies = {}
 
 
-    if (self.PlayerRaceId == nil) then 
-        if (self.Player ~= nil) then 
+    if (self.PlayerRaceId == nil) then
+        if (self.Player ~= nil) then
             self.PlayerRaceId = self.Player:GetRaceId()
             local deadzoneRaceEntry = DeadzoneRaceLookup[self.PlayerRaceId]
-            if (deadzoneRaceEntry ~= nil) then 
-                self.PlayerRaceIsWide = deadzoneRaceEntry.Wide 
-            else 
-                self.PlayerRaceIsWide = 0 
+            if (deadzoneRaceEntry ~= nil) then
+                self.PlayerRaceIsWide = deadzoneRaceEntry.Wide
+            else
+                self.PlayerRaceIsWide = 0
             end
         end
     end
@@ -659,7 +665,7 @@ function Perspective:OnTimerDraw()
     -- Get the player's current screen position
     local pPos = GameLib.GetUnitScreenPosition(self.Player)
 
-    -- We want to make sure we can get the unit's screen position   
+    -- We want to make sure we can get the unit's screen position
     if pPos then
 
         -- The limits tables
@@ -674,7 +680,7 @@ function Perspective:OnTimerDraw()
         -- Finally check our categorized units.
         for index, ui in pairs(self.sorted.categorized) do
 
-            self:AddPixie(ui, pPos, pixies, items, lines)           
+            self:AddPixie(ui, pPos, pixies, items, lines)
         end
 
         -- Destroy all our pixies
@@ -687,20 +693,20 @@ function Perspective:OnTimerDraw()
         self:MarkersDraw()
 
         -- Drawing pixies want to measure a deadzone. This will be based on character size onscreen
-        -- (i.e. camera distance/angle). Get the proper information 
+        -- (i.e. camera distance/angle). Get the proper information
         local deadzone = nil
-        
+
         if (self.Player ~= nil) then
             deadzone = {
-                ["nameplateY"] = self.Player:GetOverheadAnchor().y, 
-                ["feetY"] = pPos.nY, 
-                ["raceScale"] = 1.0, 
+                ["nameplateY"] = self.Player:GetOverheadAnchor().y,
+                ["feetY"] = pPos.nY,
+                ["raceScale"] = 1.0,
                 ["scale"] = nil
             }
-            if (self.PlayerRaceId ~= nil) then 
+            if (self.PlayerRaceId ~= nil) then
                 local deadzoneRaceEntry = DeadzoneRaceLookup[self.PlayerRaceId]
-                if (deadzoneRaceEntry ~= nil) then 
-                    deadzone.raceScale = deadzoneRaceEntry.Scale 
+                if (deadzoneRaceEntry ~= nil) then
+                    deadzone.raceScale = deadzoneRaceEntry.Scale
                 end
             end
             deadzone.scale = (deadzone.feetY - deadzone.nameplateY) / 300 * deadzone.raceScale
@@ -709,7 +715,7 @@ function Perspective:OnTimerDraw()
         -- if deadzone == nil then Print("dz nil") end
 
         -- Now, for the pixies, we'll draw them in reverse, because the lists were sorted by
-        -- distance, closest to farthest.  This will ensure the farthest are drawn first and 
+        -- distance, closest to farthest.  This will ensure the farthest are drawn first and
         -- "behind" our closer pixies.
         local pixie
         for i = #pixies, 1, -1 do
@@ -718,12 +724,12 @@ function Perspective:OnTimerDraw()
 
             -- Drw the pixie
             self:DrawPixie(
-                pixie.ui, 
+                pixie.ui,
                 pixie.unit,
-                pixie.uPos, 
-                pixie.pPos, 
-                pixie.showItem, 
-                pixie.showLine, 
+                pixie.uPos,
+                pixie.pPos,
+                pixie.showItem,
+                pixie.showLine,
                 false, -- replace this by the DottedLine param - "pixie.dottedLine" or some such
                 deadzone)
         end
@@ -741,7 +747,7 @@ function Perspective:OnTimerSlow()
 
     if player then
         local pos = player:GetPosition()
-    
+
         if pos then
             -- Get the player's current vector from position.
             local vector = Vector3.New(pos.x, pos.y, pos.z)
@@ -752,7 +758,7 @@ function Perspective:OnTimerSlow()
             for id, ui in pairs(self.units.categorized) do
                 if ui then
                     local unit = GameLib.GetUnitById(id)
-                
+
                     if unit and self:UpdateUnit(ui, unit) then
                         table.insert(self.sorted.categorized, ui)
                     end
@@ -760,7 +766,7 @@ function Perspective:OnTimerSlow()
             end
 
             table.sort(self.sorted.categorized, function(a, b) return (a.distance or 0) < (b.distance or 0) end)
-            
+
             if self.markersInitialized then
                 self:MarkersUpdate(vector)
             else
@@ -795,7 +801,7 @@ function Perspective:OnTimerFast(forced)
 
     if player then
         local pos = player:GetPosition()
-    
+
         if pos then
             -- Get the player's current vector from position.
             local vector = Vector3.New(pos.x, pos.y, pos.z)
@@ -806,7 +812,7 @@ function Perspective:OnTimerFast(forced)
             for id, ui in pairs(self.units.prioritized) do
                 if ui then
                     local unit = GameLib.GetUnitById(id)
-                
+
                     if unit and self:UpdateUnit(ui, unit) then
                         table.insert(self.sorted.prioritized, ui)
                     end
@@ -851,17 +857,17 @@ function Perspective:UpdateUnitCategory(ui, unit)
                 -- busy then we do not care for this unit at this time.
                 self:UpdateActivationState(ui, unit)
             end
-        
-            -- Only continue looking for a category if it has not be found by now, unless its a 
+
+            -- Only continue looking for a category if it has not be found by now, unless its a
             -- scientist item, then we'll further check the rewards to see if its an active scan
             -- mission target, it will then be reclassified as such.
             if not ui.category or ui.category == "scientist" then
-                -- Determines if any rewards for this unit exist, such as quest objectvies, 
+                -- Determines if any rewards for this unit exist, such as quest objectvies,
                 -- challenge objectives or scientist scan target.
                 if ui.hasQuest then
                     local t = unit:GetType()
 
-                    if ui.hasActivation and 
+                    if ui.hasActivation and
                         not Options:GetOptionValue(nil, "disabled", "questInteractable") then
                         ui.category = "questInteractable"
                     elseif not ui.hasActivation and (t == "Simple" or t == "SimpleCollidable") then
@@ -878,7 +884,7 @@ function Perspective:UpdateUnitCategory(ui, unit)
                 elseif ui.hasEvent then
                     local t = unit:GetType()
 
-                    if ui.hasActivation and 
+                    if ui.hasActivation and
                         not Options:GetOptionValue(nil, "disabled", "eventInteractable") then
                         ui.category = "eventInteractable"
                     elseif not ui.hasActivation and (t == "Simple" or t == "SimpleCollidable") then
@@ -889,11 +895,11 @@ function Perspective:UpdateUnitCategory(ui, unit)
                             ui.category = "eventObjective"
                         end
                     end
-                elseif ui.hasChallenge and 
-                    not Options:GetOptionValue(nil, "disabled", "challenge") then 
+                elseif ui.hasChallenge and
+                    not Options:GetOptionValue(nil, "disabled", "challenge") then
                     ui.category = "challenge"
-                elseif ui.hasScan and 
-                    not Options:GetOptionValue(nil, "disabled", "scientistScans") then 
+                elseif ui.hasScan and
+                    not Options:GetOptionValue(nil, "disabled", "scientistScans") then
                     ui.category = "scientistScans"
                 end
 
@@ -923,7 +929,7 @@ function Perspective:UpdateUnitCategory(ui, unit)
 
             -- If a category has still not been found for the unit, then determine its disposition
             -- and difficulty and categorize it as such.
-            if not ui.category and unit:GetType() == "NonPlayer" and not unit:IsDead() and 
+            if not ui.category and unit:GetType() == "NonPlayer" and not unit:IsDead() and
                 not (unit:GetMouseOverType() == "Simple" or unit:GetMouseOverType() == "SimpleCollidable") then
                 local disposition = "friendly"
                 local difficulty = ""
@@ -934,7 +940,13 @@ function Perspective:UpdateUnitCategory(ui, unit)
                     disposition = "neutral"
                 end
 
-                -- Rank: 
+                -- Legendary Champion
+                --    Rank 5
+                --    Eliteness 1, GroupValue 5
+                --    AffiliationName: Legendary Champion
+                --    Faction: 978
+
+                -- Rank:
                 --   Rank 0: Fodder (1st Skull)
                 --   Rank 1: Minion (1st Skull)
                 --   Rank 2: Standard (2nd Skull)
@@ -942,7 +954,7 @@ function Perspective:UpdateUnitCategory(ui, unit)
                 --   Rank 4: Superior (3rd Skull)
                 --   Rank 5: Prime (3rd Skull)
 
-                -- Eliteness / GroupValue: 
+                -- Eliteness / GroupValue:
                 --   Eliteness 0, GroupValue 0: 1 Player
                 --   Eliteness 1, GroupValue 5: 5 Player
                 --   Eliteness 2, GroupValue 20: 20 Player
@@ -950,17 +962,11 @@ function Perspective:UpdateUnitCategory(ui, unit)
                 -- Rare Mobs:
                 --   AffiliationName: Elite Champion
 
-                -- Not sure how accurate this is
-                -- Difficulty 1:    Minion, Grunt, Challenger
-                -- Difficulty 3:    Prime
-                -- Difficulty 4:    5 Man? - XT Destroyer (Galeras)
-                -- Difficulty 5:    10 Man?
-                -- Difficulty 6:    20 Man? - Doomthorn the Ancient (Galeras)
-
-                -- Eliteness 1:     5 Man + (Dungeons?)
-                -- Eliteness 2:     20 Man? - Doomthorn the Ancient (Galeras)
-
-                if unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion and disposition == "hostile"then
+                if unit:GetAffiliationName() == L.Unit_AffiliationName_LegendChampion then
+                    disposition = "hostile"
+                    difficulty = "Legend"
+                elseif unit:GetAffiliationName() == L.Unit_AffiliationName_EliteChampion then
+                    disposition = "hostile"
                     difficulty = "Elite"
                 elseif unit:GetGroupValue() > 1 then
                     difficulty = "Group"
@@ -972,7 +978,7 @@ function Perspective:UpdateUnitCategory(ui, unit)
 
                 if not Options.db.profile[Options.profile].categories[npcType].disabled then
                     ui.category = npcType
-                end 
+                end
             end
 
             if unit:IsDead() then
@@ -1005,10 +1011,10 @@ function Perspective:UpdateUnitInfo(ui, unit)
         -- Load the options for this unit.
         self:UpdateOptions(ui)
 
-        -- Unit is not disabled and we have our options loaded for it, 
+        -- Unit is not disabled and we have our options loaded for it,
         -- lets finish updating its information.
         if not ui.disabled then
-            if ui.limitBy and ui.limitBy ~= "none" then 
+            if ui.limitBy and ui.limitBy ~= "none" then
                 if     ui.limitBy == "name"         then ui.limitId = { ui.name }
                 elseif ui.limitBy == "category"     then ui.limitId = { ui.category }
                 elseif ui.limitBy == "quest"        then ui.limitId = ui.quests
@@ -1017,7 +1023,7 @@ function Perspective:UpdateUnitInfo(ui, unit)
             else
                 ui.limitId = nil
             end
-            
+
             -- Update the unit, this will sort it into the correct table
             self:UpdateUnit(ui, unit)
         end
@@ -1033,14 +1039,14 @@ local function updateOptions(ui)
 
         -- Determines if this is a named unit with a set display as value.
         ui.display = ui.named  and Options.db.profile[Options.profile].names[ui.name].display or ui.display
-        
+
         -- Lets the adodn know we've loaded this ui.
-        ui.loaded = true    
+        ui.loaded = true
     else
         ui.loaded = false
-    end             
+    end
 end
-    
+
 function Perspective:UpdateOptions(ui, full)
     if ui then
         -- Update only the specific unit information
@@ -1069,7 +1075,7 @@ function Perspective:UpdateOptions(ui, full)
                         updateOptions(ui)
                     end
                 end
-            end         
+            end
         end
 
         -- Causes immediate updates
@@ -1079,7 +1085,7 @@ function Perspective:UpdateOptions(ui, full)
 end
 
 function Perspective:UpdateSpellEffects(ui, unit)
-    local tables = { 
+    local tables = {
         { name = "debuffs", ar = "arHarmful" },
         { name = "buffs", ar = "arBeneficial" } }
 
@@ -1147,7 +1153,7 @@ function Perspective:UpdateZoneSpellEffects()
                 if isEnabled == true then
                     -- Valid buff we need to be checking for.
                     self[tbl][id] = { category = options.category, disposition = options.disposition }
-                
+
                     -- Active table.
                     active = true
                 end
@@ -1173,7 +1179,7 @@ function Perspective:UpdateUnit(ui, unit)
                 if unit:IsDead() then -- Clear dead units
                     -- Clear dead npc quest / challenge objectives, but not scientist scans as
                     -- well as harvest
-                    if unit:GetType() == "Player" or 
+                    if unit:GetType() == "Player" or
                         unit:GetType() == "Harvest" or
                         ui.category == "questObjective" or
                         ui.category == "challenge" then
@@ -1199,19 +1205,19 @@ function Perspective:UpdateUnit(ui, unit)
                     if pPos and uPos then
                         -- Get the distance from the player.
                         ui.distance = (pVec - ui.vector):Length()
-                        
+
                         -- Get the scale size based on distance.
                         ui.scale = math.min(1 / (ui.distance / 100), 1)
-                        
+
                         -- Determine if the unit is in range of display.
-                        ui.inRange = (ui.distance >= ui.minDistance and 
-                                      ui.distance <= ui.maxDistance and 
+                        ui.inRange = (ui.distance >= ui.minDistance and
+                                      ui.distance <= ui.maxDistance and
                                       zDistance <= ui.zDistance)
 
                         -- Determine if the unit is in skill range.
                         ui.inRangeLimit = (ui.distance <= ui.rangeLimit)
 
-                        -- Scale our icon based on the dimensions and scale factor.           
+                        -- Scale our icon based on the dimensions and scale factor.
                         ui.scaledWidth = ui.iconWidth * math.max(ui.scale, .5)
                         ui.scaledHeight = ui.iconHeight * math.max(ui.scale, .5)
 
@@ -1272,7 +1278,7 @@ function Perspective:MarkersDraw()
             if not marker.disabled and
                 marks < marker.max and
                 uPos.z > 0 and
-                region.distance and 
+                region.distance and
                 region.inRange then
 
                 if marker.showIcon then
@@ -1282,8 +1288,8 @@ function Perspective:MarkersDraw()
                         loc = {
                             fPoints = { 0, 0, 0, 0 },
                             nOffsets = {
-                                uPos.x - (marker.iconWidth / 2), 
-                                uPos.y - (marker.iconHeight / 2), 
+                                uPos.x - (marker.iconWidth / 2),
+                                uPos.y - (marker.iconHeight / 2),
                                 uPos.x + (marker.iconWidth / 2),
                                 uPos.y + (marker.iconHeight / 2) } } })
                 end
@@ -1304,8 +1310,8 @@ function Perspective:MarkersDraw()
                         loc = {
                             fPoints = { 0, 0, 0, 0 },
                             nOffsets = {
-                                uPos.x - 100, 
-                                uPos.y + (marker.iconHeight / 2), 
+                                uPos.x - 100,
+                                uPos.y + (marker.iconHeight / 2),
                                 uPos.x + 100,
                                 uPos.y + (100) } },
                         flagsText = {
@@ -1313,8 +1319,8 @@ function Perspective:MarkersDraw()
                             DT_WORDBREAK = true } })
                 end
 
-                if marker.showIcon or 
-                    marker.showName or 
+                if marker.showIcon or
+                    marker.showName or
                     marker.showDistance then
                     marks = marks + 1
                 end
@@ -1332,13 +1338,13 @@ function Perspective:MarkersInit()
     -- Destroy any current makers
     self.markers = {}
 
-    local episodes = PlayerPathLib:GetPathEpisodeForZone()
+    local episodes = PlayerPathLib.GetPathEpisodeForZone()
 
     if episodes then
         for _, mission in pairs(episodes:GetMissions()) do
             self:MarkerPathUpdate(mission)
         end
-    end     
+    end
 
     episodes = QuestLib:GetTrackedEpisodes()
 
@@ -1413,7 +1419,7 @@ function Perspective:UpdateAllEvents()
                 for _, objective in pairs(event:GetObjectives()) do
                     for index, loc in pairs(objective:GetLocations()) do
                         table.insert(self.markers[id].regions, {
-                            vector = Vector3.New(loc.x, loc.y, loc.z) 
+                            vector = Vector3.New(loc.x, loc.y, loc.z)
                         })
                     end
                 end
@@ -1459,9 +1465,9 @@ end
 
 function Perspective:MarkerQuestUpdate(quest)
     local id = "quest" .. quest:GetId()
-        
-    if quest:IsTracked() and 
-      (quest:GetState() == Quest.QuestState_Accepted or 
+
+    if quest:IsTracked() and
+      (quest:GetState() == Quest.QuestState_Accepted or
        quest:GetState() == Quest.QuestState_Achieved) then
         -- Make sure we have actual map regions
         if table.getn(quest:GetMapRegions()) > 0 then
@@ -1488,12 +1494,12 @@ function Perspective:MarkerQuestUpdate(quest)
 end
 
 function Perspective:MarkerUpdateOptions(marker, category)
-    local options = { 
-        "disabled", 
+    local options = {
+        "disabled",
         "showIcon",
         "showName",
         "showDistance",
-        "icon", 
+        "icon",
         "iconColor",
         "iconWidth",
         "iconHeight",
@@ -1532,7 +1538,7 @@ function Perspective:MarkerUpdate(marker, vector)
         for index, region in pairs(marker.regions) do
             -- Get the distance to the marker
             region.distance = math.ceil((vector - region.vector):Length())
-                
+
             -- Determine if the player is in the region
             region.inRange = (region.distance >= marker.minDistance and
                             region.distance <= marker.maxDistance)
@@ -1589,7 +1595,7 @@ function Perspective:OnTargetUnitChanged(unit)
             -- Categorize the target unit.
             self:UpdateUnitCategory(ui, unit)
         end
-    end 
+    end
 end
 
 function Perspective:OnAlternateTargetUnitChanged(unit)
@@ -1617,7 +1623,7 @@ function Perspective:OnAlternateTargetUnitChanged(unit)
             -- Categorize the target unit.
             self:UpdateUnitCategory(ui, unit)
         end
-    end 
+    end
 end
 
 function Perspective:OnWorldChanged()
@@ -1658,7 +1664,7 @@ function Perspective:OnQuestStateChanged(quest, state)
     if self.loaded then
         -- Update our quest location markers
         self:MarkerQuestUpdate(quest)
-    
+
         -- Update the quest units based on the quest
         self:UpdateQuestUnits(quest, state)
     end
@@ -1733,7 +1739,7 @@ function Perspective:OnGroup_MemberFlagsChanged(index, arg2, flags)
 
     if unit and unit:IsValid() then
         local ui = self:GetUnitInfo(unit)
-        
+
         -- Insert into queue to be recategorized
         table.insert(self.units.queue, { ui = ui, unit = unit, recategorize = true })
         --self:UpdateUnitCategory(ui, unit)
@@ -1765,7 +1771,7 @@ function Perspective:OnChatZoneChange()
     self:OnWorldChanged()
 end
 
-function Perspective:PrepareAccountFriends() 
+function Perspective:PrepareAccountFriends()
     self.arAccountFriends = {}
     for k, tFriend in pairs(FriendshipLib:GetAccountList() or {}) do
         if(tFriend.arCharacters) then
@@ -1832,9 +1838,9 @@ function Perspective:RecategorizeAllUnits(queue)
             local ui = self:GetUnitInfo(unit)
 
             if queue then
-                table.insert(self.units.queue, { 
-                    ui = ui, 
-                    unit = unit, 
+                table.insert(self.units.queue, {
+                    ui = ui,
+                    unit = unit,
                     recategorize = true })
             else
                 self:UpdateUnitCategory(ui, unit)
@@ -1852,16 +1858,16 @@ function Perspective:UpdateQuestUnits(quest, state)
                 -- Get the ui for the unit or create a new one.
                 local ui = self:GetUnitInfo(unit)
 
-                table.insert(self.units.queue, { 
-                    ui = ui, 
-                    unit = unit, 
-                    table = "quests", 
+                table.insert(self.units.queue, {
+                    ui = ui,
+                    unit = unit,
+                    table = "quests",
                     new = true,
                     id = quest:GetId() })
             end
         end
     else
-        -- Quest abandoned, accomplished, etc.. something we already know about, 
+        -- Quest abandoned, accomplished, etc.. something we already know about,
         -- therefore we only need to search our currently categorized units and
         -- update them.
         for _, tbl in pairs({ "prioritized", "categorized" }) do
@@ -1869,10 +1875,10 @@ function Perspective:UpdateQuestUnits(quest, state)
                 if ui.hasQuest and ui.quests[quest:GetId()] then
                     local unit = GameLib.GetUnitById(id)
 
-                    table.insert(self.units.queue, { 
-                        ui = ui, 
-                        unit = unit, 
-                        table = "quests", 
+                    table.insert(self.units.queue, {
+                        ui = ui,
+                        unit = unit,
+                        table = "quests",
                         id = quest:GetId() })
                 end
             end
@@ -1885,16 +1891,16 @@ function Perspective:UpdateChallengeUnits(challenge, active)
         -- Update all known units that have the new quest.
         for id, unit in pairs(self.units.all) do
             -- Make sure the unit is still valid and has a challenge reward for the challenge.
-            if unit:IsValid() and               -- Valid 
+            if unit:IsValid() and               -- Valid
                 unit:GetType() ~= "Player" and  -- Non Player
-                not unit:IsDead() then          -- Non Dead 
+                not unit:IsDead() then          -- Non Dead
                 -- Get the ui for the unit.
                 local ui = self:GetUnitInfo(unit)
 
-                table.insert(self.units.queue, { 
-                    ui = ui, 
-                    unit = unit, 
-                    table = "challenges", 
+                table.insert(self.units.queue, {
+                    ui = ui,
+                    unit = unit,
+                    table = "challenges",
                     new = true,
                     id = challenge:GetId() })
             end
@@ -1907,10 +1913,10 @@ function Perspective:UpdateChallengeUnits(challenge, active)
                     local unit = GameLib.GetUnitById(id)
 
                     if unit then
-                        table.insert(self.units.queue, { 
-                            ui = ui, 
-                            unit = unit, 
-                            table = "challenges", 
+                        table.insert(self.units.queue, {
+                            ui = ui,
+                            unit = unit,
+                            table = "challenges",
                             id = challenge:GetId() })
                     end
                 end
@@ -1935,16 +1941,16 @@ function Perspective:GetRaidType(unit)
             local member = GroupLib.GetGroupMember(i)
 
             if member.bIsOnline then
-                if member.bMainTank and 
+                if member.bMainTank and
                     not Options.db.profile[Options.profile].categories.mainTank.disabled then
                     return "mainTank"
                 elseif  member.bMainAssist and
                     not Options.db.profile[Options.profile].categories.mainAssist.disabled then
                     return "mainAssist"
-                elseif member.bTank and 
+                elseif member.bTank and
                     not Options.db.profile[Options.profile].categories.tank.disabled then
                     return "tank"
-                elseif member.bHealer and 
+                elseif member.bHealer and
                     not Options.db.profile[Options.profile].categories.healer.disabled then
                     return "healer"
                 elseif  member.bDPS and
@@ -1965,13 +1971,13 @@ end
 function Perspective:UpdatePlayer(ui, unit)
 
     local player = GameLib.GetPlayerUnit()
-    
+
     -- We don't care about ourselves, or invalid units
     if unit:IsThePlayer() or not unit:IsValid() or unit:IsDead() then return end
 
     -- Check debuffs, then buffs
     ui.category = self:UpdateSpellEffects(ui, unit)
-    
+
     if not ui.category then
         if unit:IsPvpFlagged() then
             local category = "friendlyPvp"
@@ -2016,7 +2022,7 @@ function Perspective:UpdatePlayer(ui, unit)
         if not ui.category and unit:IsAccountFriend() and
             not Options.db.profile[Options.profile].categories.accountFriend.disabled then
             ui.category = "accountFriend"
-            
+
             if ui.showName then
                 local strAccountName = self.arAccountFriends[ui.name]
                 if strAccountName then
@@ -2025,7 +2031,7 @@ function Perspective:UpdatePlayer(ui, unit)
             end
 
         -- Check to see if the unit is in our guild
-        elseif  player and player:GetGuildName() and 
+        elseif  player and player:GetGuildName() and
             unit:GetGuildName() == player:GetGuildName() and
             not Options.db.profile[Options.profile].categories.guild.disabled then
             ui.category = "guild"
@@ -2059,7 +2065,7 @@ function Perspective:UpdateNonPlayer(ui, unit)
         if (unit:GetFaction() == 170 or unit:GetFaction() == 900) and unit:GetName() ~= L.Unit_Maimbot_R4 then
             ui.category = "wotwChampion"
         end
-    end 
+    end
 
     -- Holiday Expedition: Quiet Downs
     --  might wanna limit to Zone ID 252 "Stygian Thicket"
@@ -2072,7 +2078,7 @@ end
 function Perspective:UpdateHarvest(ui, unit)
     local skill = unit:GetHarvestRequiredTradeskillName()
     local category
-    
+
     if not unit:IsDead() then
         if skill == L.Tradeskill_Farmer then
             category = "farmer"
@@ -2081,9 +2087,9 @@ function Perspective:UpdateHarvest(ui, unit)
         elseif skill == L.Tradeskill_Relic_Hunter then
             category = "relichunter"
         elseif skill == L.Tradeskill_Survivalist then
-            category = "survivalist" 
+            category = "survivalist"
         end
-        
+
         if category and not Options.db.profile[Options.profile].categories[category].disabled then
             ui.category = category
         end
@@ -2111,8 +2117,8 @@ end
 function Perspective:UpdateLoot(ui, unit)
     local loot = unit:GetLoot()
 
-    if loot and 
-        loot.eLootItemType and 
+    if loot and
+        loot.eLootItemType and
         loot.eLootItemType == 6 and
         not Options.db.profile[Options.profile].categories.questLoot.disabled then
         ui.category = "questLoot"
@@ -2126,7 +2132,7 @@ function Perspective:UpdateCollectible(ui, unit)
         not Options.db.profile[Options.profile].categories.secretStash.disabled then
             ui.category = "secretStash"
     end
-end    
+end
 
 function Perspective:UpdateDiscovery(ui, unit)
     local name = unit:GetName()
@@ -2135,13 +2141,13 @@ function Perspective:UpdateDiscovery(ui, unit)
         not Options.db.profile[Options.profile].categories.discovery.disabled then
             ui.category = "discovery"
     end
-end    
+end
 
 function Perspective:IsUnitBusy(unit)
     local state = unit:GetActivationState()
 
-    if state.Busy and state.Busy.bIsActive then 
-        return true 
+    if state.Busy and state.Busy.bIsActive then
+        return true
     else
         return false
     end
@@ -2175,13 +2181,13 @@ function Perspective:UpdateActivationState(ui, unit)
     end
 
     for k, v in pairs(activationStates) do
-        if state[v.state] and 
+        if state[v.state] and
             state[v.state].bIsActive and
             state[v.state].bCanInteract and
             not Options.db.profile[Options.profile].categories[v.category].disabled then
 
-            if v.state == "Datacube" and 
-                PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Scientist and 
+            if v.state == "Datacube" and
+                PlayerPathLib:GetPlayerPathType() == PlayerPathLib.PlayerPathType_Scientist and
                 string.find(unit:GetName(), L.Unit_Datacube) then
                 category = "scientistScans"
             end
@@ -2207,8 +2213,8 @@ function Perspective:UpdateActivationState(ui, unit)
             path = "explorer"
         end
 
-        if state.Collect and 
-            state.Collect.bUsePlayerPath and 
+        if state.Collect and
+            state.Collect.bUsePlayerPath and
             state.Collect.bCanInteract and
             state.Collect.bIsActive then
 
@@ -2218,8 +2224,8 @@ function Perspective:UpdateActivationState(ui, unit)
                 category = path
             end
 
-        elseif state.Interact and 
-            state.Interact.bUsePlayerPath and 
+        elseif state.Interact and
+            state.Interact.bUsePlayerPath and
             state.Interact.bCanInteract and
             state.Interact.bIsActive then
             category = path
@@ -2310,8 +2316,8 @@ function Perspective:UpdateRewards(ui, unit)
 
         for i = 1, #ri do
             local type = ri[i].strType
-            
-            if type == "Quest" then             
+
+            if type == "Quest" then
                 -- Get the quest id
                 local questId = ri[i].idQuest
 
@@ -2340,7 +2346,7 @@ function Perspective:UpdateRewards(ui, unit)
                 if not (unit:GetType() == "NonPlayer" and unit:IsDead() ) then
                     ui.hasEvent = true
                 end
-            elseif type == "Scientist" and 
+            elseif type == "Scientist" and
                 ri[i].pmMission and
                 not ri[i].pmMission:IsComplete() then
                 -- Scan mission objective.
